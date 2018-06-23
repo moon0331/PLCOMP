@@ -17,4 +17,4 @@ scanner.h : class Scanner 선언
 
 #주의사항
 
-선언은 헤더, 정의는 
+선언은 헤더, 정의는 CPP
