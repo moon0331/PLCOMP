@@ -10,12 +10,12 @@
 
 using namespace std;
 
-const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };
-const vector<string> vtype = { "INT", "CHAR" };
+const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };	//예약어 전역 설정
+const vector<string> vtype = { "INT", "CHAR" };									//예약어 전역 설정
 
-extern SymbolTable symbolTable; //심볼테이블은 전역으로 설정
+extern SymbolTable symbolTable; //심볼테이블 전역으로 설정한 것을 여기서도 쓰겠다는 의미로 extern 사용
 
-bool var_len(const Information& a, const Information& b) {
+bool var_len(const Information& a, const Information& b) { //sorting의 기준 (1. symbol의 길이 내림차순, 2. 알파벳순 오름차순)
 	int a_len = a.getname().length(), b_len = b.getname().length();
 	if (a_len > b_len) {
 		return true;
@@ -27,7 +27,7 @@ bool var_len(const Information& a, const Information& b) {
 		return false;
 }
 
-string changeStringToID(string l) {
+string changeStringToID(string l) { //symbol을 $(number) 꼴로 바꿈
 	string line = l;
 	int num = symbolTable.getNum();
 	stable_sort(symbolTable.table.begin(), symbolTable.table.end(), var_len);
@@ -45,7 +45,7 @@ string changeStringToID(string l) {
 	return line;
 }
 
-bool isReservedWord(string token) {
+bool isReservedWord(string token) { //이 token이 예약어인가?
 	if (find(reserved.begin(), reserved.end(), token) != reserved.end()) {
 		return true;
 	}
@@ -126,7 +126,7 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 
 		cout << line << endl;
 		cout << newLine << endl;
-		output << line << endl;
+		output << newLine << endl;
 		//cout << line << "asdf" << endl;
 		//output << newLine << endl;
 	}

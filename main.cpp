@@ -9,7 +9,7 @@
 
 using namespace std;
 
-SymbolTable symbolTable; //심볼테이블은 전역으로 설정
+SymbolTable symbolTable; //심볼테이블은 전역으로 설정 (다른 소스 파일에서 사용시 extern SymbolTable symbolTable; 선언해줘야 함.
 
 int main() {
 	/*string filename;
@@ -49,7 +49,7 @@ int main() {
 
 	ifstream scanner_file_fin(filename + ".scanner");	//scanner의 결과를 사용하기 위해 새로 만듬
 
-	//parser.parsing();		//이부분 만들어야 함
+	//parser.parsing(scanner_file_fin);		//이부분 만들어야 함
 
 	inputFile_fin.close();
 	scanner_file_fin.close();
