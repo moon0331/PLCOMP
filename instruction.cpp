@@ -4,14 +4,14 @@
 
 using namespace std;
 
-//typedef enum { LD, ST, ADD, MUL, LT, CALL, JUMPF, JUMPT, JUMP, MV } Inst;
-
 string Instruction::getInstruction(Inst inst, string x) {
 	switch (inst) {
 	case CALL:
 		return "CALL\t" + x;
 	case JUMP : 
 		return "JUMP\t" + x;
+	default:
+		return "틀린 명령입니다. (1항 아님!)";
 	}
 }
 
@@ -27,6 +27,8 @@ string Instruction::getInstruction(Inst inst, string x, string y) {
 		return "JUMPT\t" + x + "\t" + y;
 	case MV:
 		return "MV\t" + x + ", " + y;
+	default:
+		return "틀린 명령입니다. (2항 아님!)";
 	}
 }
 
@@ -38,5 +40,7 @@ string Instruction::getInstruction(Inst inst, string x, string y, string z) {
 		return "MUL\t" + x + ", " + y + ", " + z;
 	case LT:
 		return "LT\t" + x + ", " + y + ", " + z;
+	default:
+		return "틀린 명령입니다. (3항 아님!)";
 	}
 }

@@ -37,6 +37,8 @@ string changeStringToID(string l) { //symbol을 $(number) 꼴로 바꿈
 		string id = symbolTable.table[i].getID();
 		int id_len = id.length();
 		size_t pos = 0;
+		cout << var << "를 " << id << "로 바꾸기 위한 체크" << endl; 
+		// asdf를 $0로 바꾸기 --> word나 num으로 바꿔야
 		while ((pos=line.find(var,pos)) != string::npos) {
 			line.replace(pos, var_len, id);
 			pos += id_len;
@@ -91,7 +93,8 @@ string* tokenize(string line) {
 			else if (regex_match(temp, reg) && !isReservedWord(temp)) {
 				cout << "\t(symbol) ";
 				if (!symbolTable.findName(temp)) {
-					symbolTable.push(Information(temp, type, string("$" + to_string(symbolTable.getNum()))));
+					string name = "$" + to_string(symbolTable.getNum());
+					symbolTable.push(Information(temp, type, name, "WORD") );
 				}
 				type = "";
 			}

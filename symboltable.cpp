@@ -34,8 +34,8 @@ ostream& operator<<(ostream& os, const Information& info) {
 /* Information에 대한 메서드 */
 
 
-Information::Information(string _name, string _type, string _ID)
-	: name(_name), type(_type), ID(_ID)
+Information::Information(string _name, string _type, string _ID, string _nontmn)
+	: name(_name), type(_type), ID(_ID), nonterminal(_nontmn)
 {
 	size = (type == "INT") ? 4 : 1;
 }
@@ -51,6 +51,9 @@ string Information::getID() {
 }
 int Information::getSize() {
 	return size;
+}
+string Information::getNonterminal() {
+	return nonterminal;
 }
 
 ostream& operator<< (ostream& os, const SymbolTable& s) {

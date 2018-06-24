@@ -10,13 +10,15 @@ private:
 	//여러 함수 적용시 함수 이름도 들어가야
 	string ID;
 	int size;
+	string nonterminal;
 public:
 
-	Information(string _name, string _type, string _ID);
+	Information(string _name, string _type, string _ID, string _nontmn);
 	string getname() const;
 	string getType();
 	string getID();
 	int getSize();
+	string getNonterminal();
 	friend ostream& operator<<(ostream& os, const Information& info);
 };
 
