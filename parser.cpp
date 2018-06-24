@@ -54,24 +54,31 @@ Parser::Parser() {
 	stack.push({ 0,"$" });
 	cout << "스택 초기화" << endl;
 	ifstream file("Compiler Grammar - Transition Table.csv");
+
+	for (int i = 0; i < NUM_OF_STATES; i++) {
+		stateArr.push_back(State(i));
+	}
+
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		string line;
 		getline(file, line);
 		vector<string> str = tok(line);
 		int idx = 0;
 		while (idx < ActionToken.size()) {
-			cout << idx << "사이즈" << endl;
+			cout << endl;
+			//cout << idx << "사이즈" << endl;
 			cout << idx << "번째 : [" << ActionToken[idx] << "], [" << str[idx] << "]" << endl;
 			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
-			//stateArr[i].getActionTable().insert(pair<string, actNum>(ActionToken[idx], str[idx]));
+			stateArr[i].getActionTable().insert(pair<string, actNum>(ActionToken[idx], str[idx]));
 			idx++;
 		}
+		cout << "이젠 goto에 넣자" << endl;
 		while (idx < ActionToken.size() + GotoToken.size()) {
 			int val = idx - ActionToken.size();
-			cout << idx << "사이즈" << endl;
+			cout << "idx = " << idx << ", val = " << val << endl;
 			cout << idx << "번째 : [" << GotoToken[val] << "], [" << str[idx] << "]" << endl;
 			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
-			//stateArr[i].getGotoTable().insert(pair<string, int>(ActionToken[idx], atoi(str[idx].c_str()))); //atoi 수정 필요
+			stateArr[i].getGotoTable().insert(pair<string, int>(GotoToken[val], atoi(str[idx].c_str()))); //atoi 수정 필요
 			idx++;
 		}
 		cout << "한 턴 끝" << endl;
@@ -80,11 +87,6 @@ Parser::Parser() {
 }
 
 void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
-
-	for (int i = 0; i < NUM_OF_STATES; i++) {
-		stateArr.push_back(State(i));
-		//stateArr[i] 정보 입력
-	}
 
 	while (!scanFile.eof()) {
 		string line;
@@ -100,7 +102,7 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
 		string s_r = tuple.str;
 		break;
 	}
-	//처리
+	//shift, reduct 처리 해야함
 }
 
 void Parser::shift() {
