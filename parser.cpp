@@ -4,14 +4,79 @@
 
 #include "parser.h"
 
-#define NUM_OF_STATES 160
+#define NUM_OF_STATES 141
+
+
+const vector<string> ActionToken = {
+	"word",		"(",		")",		"type",		";",
+	",",		"INT",		"CHAR",		"{",		"}",
+	"IF",		"THEN",		"ELSE",		"WHILE",	"=",
+	"RETURN",	">",		"<",		"+",		"*",
+	"num",		"$"
+};
+
+const vector<string> GotoToken = {
+	"prog",		"decls",	"decl",		"words",	"vtype",
+	"block",	"slist",	"stat",		"cond",		"expr",
+	"term",		"fact"
+};
 
 extern vector<State> stateArr;	//원래 state.cpp 거
+
+vector<string> tok(string line) {
+	vector<string> v;
+	int len = line.length();
+	string s = "";
+	int count = 0;
+	for (int i = 0; i <= len; i++) {
+		if (line[i] == ',' || line[i]=='\0') { //콤마 나오면
+			v.push_back(s);
+			s = "";
+			count++;
+		}
+		else {
+			s += line[i];
+		}
+	}
+	cout << count<<"번"<<endl;
+	v.erase(v.begin());
+	int size = v.size(); //34
+	int newSize = ActionToken.size() + GotoToken.size(); //34
+	cout << size << newSize << endl;
+	for (int i = 0; i < size; i++) {
+		cout << "[" << i << "] " << v[i] << " | ";
+	}
+	return v;
+}
 
 Parser::Parser() {
 	cout << "parser 초기화" << endl;
 	stack.push({ 0,"$" });
 	cout << "스택 초기화" << endl;
+	ifstream file("Compiler Grammar - Transition Table.csv");
+	for (int i = 0; i < NUM_OF_STATES; i++) {
+		string line;
+		getline(file, line);
+		vector<string> str = tok(line);
+		int idx = 0;
+		while (idx < ActionToken.size()) {
+			cout << idx << "사이즈" << endl;
+			cout << idx << "번째 : [" << ActionToken[idx] << "], [" << str[idx] << "]" << endl;
+			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
+			//stateArr[i].getActionTable().insert(pair<string, actNum>(ActionToken[idx], str[idx]));
+			idx++;
+		}
+		while (idx < ActionToken.size() + GotoToken.size()) {
+			int val = idx - ActionToken.size();
+			cout << idx << "사이즈" << endl;
+			cout << idx << "번째 : [" << GotoToken[val] << "], [" << str[idx] << "]" << endl;
+			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
+			//stateArr[i].getGotoTable().insert(pair<string, int>(ActionToken[idx], atoi(str[idx].c_str()))); //atoi 수정 필요
+			idx++;
+		}
+		cout << "한 턴 끝" << endl;
+	}
+	cout << "기본 끝" << endl;
 }
 
 void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
