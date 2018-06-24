@@ -103,6 +103,9 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
 		break;
 	}
 	//shift, reduct 처리 해야함
+	//현재 state들은 stateArr에서 관장함. state가 변할때마다 State* state가 가리키는 방향을 바꾸면 됨.
+	//shift reduce 구현 어떻게? -> stack 사용. (처음에 {0,$} 담겨있음. 이는 Tuple이라는 구조체)
+	//shift, reduce 구현......
 }
 
 void Parser::shift() {
