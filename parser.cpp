@@ -53,7 +53,7 @@ Parser::Parser() {
 	cout << "parser 초기화" << endl;
 	stack.push({ 0,"$" });
 	cout << "스택 초기화" << endl;
-	ifstream file("Compiler Grammar - Transition Table.csv");
+	ifstream file("Transition Table.csv");
 
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		stateArr.push_back(State(i));
@@ -84,6 +84,7 @@ Parser::Parser() {
 		cout << "한 턴 끝" << endl;
 	}
 	cout << "기본 끝" << endl;
+	file.close();
 }
 
 void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
