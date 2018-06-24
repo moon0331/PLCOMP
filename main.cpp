@@ -29,11 +29,9 @@ int main() {
 	cout << compilerName + filename << "입력한 파일 이름" << endl;
 	ifstream inputFile_fin(filename);
 	ofstream scanner_file(filename+".scanner"); //스캐너 거친 결과 .scanner
-	ofstream code_fin(filename + ".code");		//최종 출력 결과 .code
 	ofstream symbol_fin(filename + ".symbol");	//최종 symbol table .symbol
 
 	Scanner scanner;	//scanner 객체
-	Parser parser;		//parser 객체
 	
 	/*
 	string line;
@@ -47,12 +45,24 @@ int main() {
 	cout << symbolTable;
 	cout << "-=------------------------------" << endl;
 
-	ifstream scanner_file_fin(filename + ".scanner");	//scanner의 결과를 사용하기 위해 새로 만듬
+	ifstream scanner_file_fin(filename + ".scanner");	//scanner의 결과를 출력하기 위해 새로 만듬
+	ifstream scanner_file_to_parse(filename + ".scanner"); //scanner의 결과로 parsing하기 위해 만듬
+	ofstream code_fin(filename + ".code");		//최종 출력 결과 .code
 
-	//parser.parsing(scanner_file_fin);		//이부분 만들어야 함
+	cout << "변경된 코드는" << endl;
+	string line;
+	while (!scanner_file_fin.eof()) {
+		getline(scanner_file_fin, line);
+		cout << line << endl;
+	}
+	scanner_file_fin.close();
+
+	Parser parser;		//parser 객체
+
+	parser.parse(scanner_file_to_parse, code_fin);
 
 	inputFile_fin.close();
-	scanner_file_fin.close();
+	scanner_file_to_parse.close();
 	code_fin.close();
 	symbol_fin.close();
 	return 0;
