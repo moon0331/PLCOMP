@@ -21,12 +21,13 @@ int main() {
 
 	const string compilerName = "compiler2014 ";
 	string filename;
+    cout<<"FILE NAME: ";
 	cin >> filename;
-	if (compilerName+filename != "compiler2014 test.txt") { //일단 test만 가능하도록 처리함!
+	if (compilerName+filename != "compiler2014 test") { //일단 test만 가능하도록 처리함!
         cout << "ERROR: wrong file name" << endl;
 		return 0;
 	}
-    cout << compilerName + filename << "INPUT FILE NAME" << endl;
+    cout << compilerName + filename << ": INPUT FILE NAME" << endl;
 	ifstream inputFile_fin(filename);
 	ofstream scanner_file(filename+".scanner"); //스캐너 거친 결과 .scanner
 	ofstream symbol_fin(filename + ".symbol");	//최종 symbol table .symbol
