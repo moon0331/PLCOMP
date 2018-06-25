@@ -51,7 +51,7 @@ vector<string> tok(string line) {
 
 Parser::Parser() {
 	cout << "parser INITIALIZATION" << endl;
-	stack.push({ 0,"$" });
+	sstack.push({ 0,"$" });
 	cout << "STACK INITIALIZATION" << endl;
 	ifstream file("Transition Table.csv");
 
@@ -98,7 +98,7 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
 	cout << str << endl; //str ¸¸µë
 
 	while (true) {
-		Tuple tuple = stack.top();
+		Tuple tuple = sstack.top();
 		int stateNo = tuple.stateNum;
 		string s_r = tuple.str;
 		break;
@@ -125,7 +125,7 @@ void Parser::shift() {
 		s += str[i];
 	}
 	str = str.substr(i+1);
-	stack.push({});
+	sstack.push({});
 }
 
 void Parser::reduce() {

@@ -19,7 +19,7 @@ typedef struct tuple {
 class Parser {
 private:
 	string str;			// 처리해야 할 string
-	stack<Tuple> stack;
+	stack<Tuple> sstack;
 	State* state;		// 현재 state 가리킴
 public:
 	Parser();

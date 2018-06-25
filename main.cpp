@@ -11,7 +11,7 @@ using namespace std;
 
 SymbolTable symbolTable; //심볼테이블은 전역으로 설정 (다른 소스 파일에서 사용시 extern SymbolTable symbolTable; 선언해줘야 함.
 
-int main() {
+int main(int argc, const char *argv[]) {
 	/*string filename;
 	cin >> filename; //파일이름 입력
 	ofstream source;
@@ -28,9 +28,27 @@ int main() {
 		return 0;
 	}
     cout << compilerName + filename << ": INPUT FILE NAME" << endl;
-	ifstream inputFile_fin(filename);
-	ofstream scanner_file(filename+".scanner"); //스캐너 거친 결과 .scanner
-	ofstream symbol_fin(filename + ".symbol");	//최종 symbol table .symbol
+	ifstream inputFile_fin;
+    inputFile_fin.open(filename);
+    
+	ofstream scanner_file; //스캐너 거친 결과 .scanner
+    scanner_file.open(filename+".scanner");
+    
+	ofstream symbol_fin;	//최종 symbol table .symbol
+    symbol_fin.open(filename + ".symbol");
+    
+    if(!inputFile_fin.is_open()){
+        cout<<"INPUT FILE IS NOT OPEN"<<endl;
+        return 0;
+    }
+    if(!scanner_file.is_open()){
+        cout<<"SCANNER FILE IS NOT OPEN"<<endl;
+        return 0;
+    }
+    if(!symbol_fin.is_open()){
+        cout<<"SYMBOL TABLE IS NOT OPEN"<<endl;
+        return 0;
+    }
 
 	Scanner scanner;	//scanner 객체
 	
