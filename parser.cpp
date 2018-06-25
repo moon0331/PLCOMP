@@ -5,7 +5,25 @@
 #include "parser.h"
 
 #define NUM_OF_STATES 141
+#define NUM_OF_ACTION 22
+#define NUM_OF_GOTO   12
+#define NUM_OF_COL    35
 
+// LENGTH of LR_TABLE: 35
+enum ENUM_LR_TABLE {
+    STATE, WORD, OPEN_P, CLOSE_P, TYPE, SEMI, COMMA, INT, CHAR, OPEN_B, CLOSE_B, IF,
+    THEN, ELSE, WHILE, EQUAL, RETURN, BIGGER, SMALLER, PLUS, MULTIPLY, NUM, DOLLAR,
+    P, DS, D, WS, V, B, SL, S, C, E, T, F
+};
+
+string enum_to_str[] = {
+    "STATE", "word", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF",
+    "THEN", "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "$",
+    "prog", "decls", "decl", "words", "vtype", "block", "slist", "stat", "cond",
+    "expr", "term", "fact"
+};
+
+int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
 
 const vector<string> ActionToken = {
 	"word",		"(",		")",		"type",		";",
@@ -21,7 +39,7 @@ const vector<string> GotoToken = {
 	"term",		"fact"
 };
 
-extern vector<State> stateArr;	//원래 state.cpp 거
+extern vector<State> stateArr;
 
 vector<string> tok(string line) {
 	vector<string> v;
@@ -29,7 +47,7 @@ vector<string> tok(string line) {
 	string s = "";
 	int count = 0;
 	for (int i = 0; i <= len; i++) {
-		if (line[i] == ',' || line[i]=='\0') { //콤마 나오면
+		if (line[i] == ',' || line[i]=='\0') {
 			v.push_back(s);
 			s = "";
 			count++;
@@ -50,6 +68,74 @@ vector<string> tok(string line) {
 }
 
 Parser::Parser() {
+    // TRANSITION TABLE CREATION //////////////////////////////////////////////////////////////////////////
+    cout<<"READING TABLE FROM CSV"<<endl;
+    ifstream csv_read("/Users/BaeHaneul/Developer/PLCOMP/PLCOMP/Transition_table.csv");
+    if(csv_read.is_open()){
+        string line;
+        while (!csv_read.eof()) {
+            getline(csv_read, line);
+            int line_length = (int)line.length();
+            int state_num=0;
+            
+            int i;  // positioned at , or space character
+            
+            for(i=0; i<line_length; i++){
+                if(line[i]==','){
+                    state_num = stoi(line.substr(0, i));
+                    LR_TABLE[state_num][STATE] = state_num;
+                    i++;
+                    break;
+                }
+            }
+            
+            int pos=1; // pointing at LR_TABLE column
+            
+            while(i<=line_length-1){
+                int j;
+                if(line[i]=='s' || line[i]=='r'){  // line[i] == 's'
+                    int action_num;
+                    for(j=i+1; j<line_length; j++){
+                        if(line[j]==','){
+                            j--;
+                            break;
+                        }
+                    }
+                    if(line[i]=='s'){
+                        action_num = stoi(line.substr(i+1, j-i+1));
+                    }
+                    else{
+                        action_num = -stoi(line.substr(i+1, j-i+1));
+                    }
+                    LR_TABLE[state_num][pos] = action_num;
+                    cout<<"STATE: "<<state_num<<" / ACTION: "<<enum_to_str[pos]<<" / ACTION_NUM: "<<action_num<<endl;
+                    i = j+1;
+                }
+                else if(line[i]==','){
+                    pos++;
+                    i++;
+                }
+                else{  // line[i] is a number for a GOTO TABLE
+                    int goto_num;
+                    for(j=i+1; j<line_length; j++){
+                        if(j==','){
+                            j--;
+                            break;
+                        }
+                    }
+                    goto_num = stoi(line.substr(i, j-i+1));
+                    LR_TABLE[state_num][pos] = goto_num;
+                    cout<<"STATE: "<<state_num<<" / GOTO: "<<enum_to_str[pos]<<" / GOTO_NUM: "<<goto_num<<endl;
+                    i=j+1;
+                }
+            }
+        }
+    }else{
+        cout<<"FAILED TO OPEN CSV FILE."<<endl;
+        exit(0);
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    
 	cout << "parser INITIALIZATION" << endl;
 	sstack.push({ 0,"$" });
 	cout << "STACK INITIALIZATION" << endl;
