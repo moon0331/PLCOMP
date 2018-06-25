@@ -9,33 +9,33 @@
 
 using namespace std;
 
-SymbolTable symbolTable; //½Éº¼Å×ÀÌºíÀº Àü¿ªÀ¸·Î ¼³Á¤ (´Ù¸¥ ¼Ò½º ÆÄÀÏ¿¡¼­ »ç¿ë½Ã extern SymbolTable symbolTable; ¼±¾ğÇØÁà¾ß ÇÔ.
+SymbolTable symbolTable; //global variable. (to use this variable in other cpp file, extern SymbolTable symbolTable; 
 
 int main(int argc, const char *argv[]) {
 	/*string filename;
-	cin >> filename; //ÆÄÀÏÀÌ¸§ ÀÔ·Â
+	cin >> filename; //íŒŒì¼ì´ë¦„ ì…ë ¥
 	ofstream source;
-	source.open(filename); //ÀÔ·ÂÇÒ ÆÄÀÏ »ı¼º
-	source << filename; //¾²±â
+	source.open(filename); //ì…ë ¥í•  íŒŒì¼ ìƒì„±
+	source << filename; //ì“°ê¸°
 	cout << filename;*/
 
 	const string compilerName = "compiler2014 ";
 	string filename = "test";
 //    cout<<"FILE NAME: ";
 //    cin >> filename;
-//    if (compilerName+filename != "compiler2014 test") { //ÀÏ´Ü test¸¸ °¡´ÉÇÏµµ·Ï Ã³¸®ÇÔ!
+//    if (compilerName+filename != "compiler2014 test") { //ì¼ë‹¨ testë§Œ ê°€ëŠ¥í•˜ë„ë¡ ì²˜ë¦¬í•¨!
 //        cout << "ERROR: wrong file name" << endl;
 //        return 0;
 //    }
     cout << compilerName + filename << ": INPUT FILE NAME" << endl;
 	ifstream inputFile_fin;
 //    inputFile_fin.open(filename);
-    inputFile_fin.open("/Users/BaeHaneul/Developer/PLCOMP/PLCOMP/test");  // XCODE needs the full path.
+    inputFile_fin.open("test");  // XCODE needs the full path. .......................... please modify path!
     
-	ofstream scanner_file; //½ºÄ³³Ê °ÅÄ£ °á°ú .scanner
+	ofstream scanner_file; //ìŠ¤ìºë„ˆ ê±°ì¹œ ê²°ê³¼ .scanner
     scanner_file.open(filename+".scanner");
     
-	ofstream symbol_fin;	//ÃÖÁ¾ symbol table .symbol
+	ofstream symbol_fin;	//ìµœì¢… symbol table .symbol
     symbol_fin.open(filename + ".symbol");
     
     if(!inputFile_fin.is_open()){
@@ -51,23 +51,25 @@ int main(int argc, const char *argv[]) {
         return 0;
     }
 
-	Scanner scanner;	//scanner °´Ã¼
+	Scanner scanner;	//scanner ê°ì²´
 	
 	/*
 	string line;
-	file_fin >> line; // ÆÄÀÏ->ÄÜ¼Ö
-	scanner_fout << line << endl; // ÄÜ¼Ö->ÆÄÀÏ*/
+	file_fin >> line; // íŒŒì¼->ì½˜ì†”
+	scanner_fout << line << endl; // ì½˜ì†”->íŒŒì¼*/
 
-	scanner.scan(inputFile_fin, scanner_file);	//scanner ÀÛµ¿
+	scanner.scan(inputFile_fin, scanner_file);	//scanner ì‘ë™
 	scanner_file.close();
 
-	cout << "-=------------------------------" << endl;
-	cout << symbolTable;
+	cout << "-=--symbol is-------------------" << endl;
+	vector<Information>& vv = symbolTable.table;
+	for (int i = 0; i < vv.size(); i++)
+		cout << vv[i] << endl;
 	cout << "-=------------------------------" << endl;
 
-	ifstream scanner_file_fin(filename + ".scanner");	//scannerÀÇ °á°ú¸¦ Ãâ·ÂÇÏ±â À§ÇØ »õ·Î ¸¸µë
-	ifstream scanner_file_to_parse(filename + ".scanner"); //scannerÀÇ °á°ú·Î parsingÇÏ±â À§ÇØ ¸¸µë
-	ofstream code_fin(filename + ".code");		//ÃÖÁ¾ Ãâ·Â °á°ú .code
+	ifstream scanner_file_fin(filename + ".scanner");	//ifstream for print result of scanner
+	ifstream scanner_file_to_parse(filename + ".scanner"); //ifstream for parsing
+	ofstream code_fin(filename + ".code");		//result .code
 
 	cout << "Converted Code is" << endl;
 	string line;
@@ -77,12 +79,12 @@ int main(int argc, const char *argv[]) {
 	}
 	scanner_file_fin.close();
 
-//    Parser parser;        //parser °´Ã¼
-//    parser.parse(scanner_file_to_parse, code_fin);
+    Parser parser;        //parser ê°ì²´
+    //parser.parse(scanner_file_to_parse, code_fin);
 
 	inputFile_fin.close();
 	scanner_file_to_parse.close();
 	code_fin.close();
 	symbol_fin.close();
-	return 0;
+	return 0;;
 }
