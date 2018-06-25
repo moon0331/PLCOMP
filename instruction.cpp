@@ -11,7 +11,7 @@ string Instruction::getInstruction(Inst inst, string x) {
 	case JUMP : 
 		return "JUMP\t" + x;
 	default:
-		return "Ʋ�� �����Դϴ�. (1�� �ƴ�!)";
+		return "Æ²¸° ¸í·ÉÀÔ´Ï´Ù. (1Ç× ¾Æ´Ô!)";
 	}
 }
 
@@ -28,7 +28,7 @@ string Instruction::getInstruction(Inst inst, string x, string y) {
 	case MV:
 		return "MV\t" + x + ", " + y;
 	default:
-		return "Ʋ�� �����Դϴ�. (2�� �ƴ�!)";
+		return "Æ²¸° ¸í·ÉÀÔ´Ï´Ù. (2Ç× ¾Æ´Ô!)";
 	}
 }
 
@@ -41,6 +41,6 @@ string Instruction::getInstruction(Inst inst, string x, string y, string z) {
 	case LT:
 		return "LT\t" + x + ", " + y + ", " + z;
 	default:
-		return "Ʋ�� �����Դϴ�. (3�� �ƴ�!)";
+		return "Æ²¸° ¸í·ÉÀÔ´Ï´Ù. (3Ç× ¾Æ´Ô!)";
 	}
 }

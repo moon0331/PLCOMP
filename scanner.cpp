@@ -33,11 +33,12 @@ string changeStringToID(string l) { //symbol을 $(number) 꼴로 바꿈
 	stable_sort(symbolTable.table.begin(), symbolTable.table.end(), var_len);
 	for (int i = 0; i < num; i++) {
 		string var = symbolTable.table[i].getname();
-		int var_len = var.length();
+		int var_len = (int)var.length();
 		string id = symbolTable.table[i].getID();
-		int id_len = id.length();
+		int id_len = (int)id.length();
 		size_t pos = 0;
-		cout << var << "를 " << id << "로 바꾸기 위한 체크" << endl; 
+        cout<<"Check to change "<<var<<" to "<<id<<endl;
+//        cout << var << "를 " << id << "로 바꾸기 위한 체크" << endl;
 		// asdf를 $0로 바꾸기 --> word나 num으로 바꿔야
 		while ((pos=line.find(var,pos)) != string::npos) {
 			line.replace(pos, var_len, id);
@@ -61,13 +62,13 @@ string* tokenize(string line) {
 	cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
 	//const regex reg("([0-9|A-z])*");
 	const regex reg("([A-z])*");
-	int size = line.size();
+	int size = (int)line.size();
 	int seperate = 0;
 	for (int i = 0; i < size; i++) {
 		if (line[i] == ' ')
 			seperate++;
 	}
-	cout << "공백 개수는 " << seperate << endl;
+    cout << "NUM of Empty String: " << seperate << endl;
 	string* token = new string[seperate+1];
 	string temp;
 	string type;
@@ -109,7 +110,7 @@ string* tokenize(string line) {
 	cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
 
 	for (int i = 0; i < num; i++) {
-		cout << i << "번째 token은 " << token[i] <<endl;
+        cout << i << "th Token: " << token[i] <<endl;
 	}
 	return token;
 }
@@ -122,7 +123,7 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 
 	for (int i = 1; !input.eof(); i++) {
 		getline(input, line);
-		cout << "[" << i << "]" << line << " || 글자수 : " << line.length() << endl;
+		cout << "[" << i << "]" << line << " || NUM of Characters: " << line.length() << endl;
 		aaa = changeStringToToken(line);
 
 		string newLine=changeStringToID(line);

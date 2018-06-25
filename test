@@ -1,5 +1,0 @@
-printf ( a , b ) { 
-CHAR cc = 0 ; 
-INT asdf = 1 ; 
-RETURN asdf ; 
-}

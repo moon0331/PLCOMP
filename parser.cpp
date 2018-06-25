@@ -25,7 +25,7 @@ extern vector<State> stateArr;	//원래 state.cpp 거
 
 vector<string> tok(string line) {
 	vector<string> v;
-	int len = line.length();
+	int len = (int)line.length();
 	string s = "";
 	int count = 0;
 	for (int i = 0; i <= len; i++) {
@@ -38,10 +38,10 @@ vector<string> tok(string line) {
 			s += line[i];
 		}
 	}
-	cout << count<<"번"<<endl;
+	cout << count<<"th"<<endl;
 	v.erase(v.begin());
-	int size = v.size(); //34
-	int newSize = ActionToken.size() + GotoToken.size(); //34
+	int size = (int)v.size(); //34
+	int newSize = (int)ActionToken.size() + (int)GotoToken.size(); //34
 	cout << size << newSize << endl;
 	for (int i = 0; i < size; i++) {
 		cout << "[" << i << "] " << v[i] << " | ";
@@ -50,9 +50,9 @@ vector<string> tok(string line) {
 }
 
 Parser::Parser() {
-	cout << "parser 초기화" << endl;
+	cout << "parser INITIALIZATION" << endl;
 	stack.push({ 0,"$" });
-	cout << "스택 초기화" << endl;
+	cout << "STACK INITIALIZATION" << endl;
 	ifstream file("Transition Table.csv");
 
 	for (int i = 0; i < NUM_OF_STATES; i++) {
@@ -67,23 +67,23 @@ Parser::Parser() {
 		while (idx < ActionToken.size()) {
 			cout << endl;
 			//cout << idx << "사이즈" << endl;
-			cout << idx << "번째 : [" << ActionToken[idx] << "], [" << str[idx] << "]" << endl;
+			cout << idx << "th: [" << ActionToken[idx] << "], [" << str[idx] << "]" << endl;
 			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
 			stateArr[i].getActionTable().insert(pair<string, actNum>(ActionToken[idx], str[idx]));
 			idx++;
 		}
-		cout << "이젠 goto에 넣자" << endl;
+		cout << "Put into goto" << endl;
 		while (idx < ActionToken.size() + GotoToken.size()) {
-			int val = idx - ActionToken.size();
+			int val = idx - (int)ActionToken.size();
 			cout << "idx = " << idx << ", val = " << val << endl;
-			cout << idx << "번째 : [" << GotoToken[val] << "], [" << str[idx] << "]" << endl;
+			cout << idx << "th : [" << GotoToken[val] << "], [" << str[idx] << "]" << endl;
 			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
 			stateArr[i].getGotoTable().insert(pair<string, int>(GotoToken[val], atoi(str[idx].c_str()))); //atoi 수정 필요
 			idx++;
 		}
-		cout << "한 턴 끝" << endl;
+		cout << "TURN END" << endl;
 	}
-	cout << "기본 끝" << endl;
+	cout << "BASIC END" << endl;
 	file.close();
 }
 

@@ -22,11 +22,11 @@ int main() {
 	const string compilerName = "compiler2014 ";
 	string filename;
 	cin >> filename;
-	if (compilerName+filename != "compiler2014 test") { //일단 test만 가능하도록 처리함!
-		cout << "파일 이름이 맞지 않음" << endl;
+	if (compilerName+filename != "compiler2014 test.txt") { //일단 test만 가능하도록 처리함!
+        cout << "ERROR: wrong file name" << endl;
 		return 0;
 	}
-	cout << compilerName + filename << "입력한 파일 이름" << endl;
+    cout << compilerName + filename << "INPUT FILE NAME" << endl;
 	ifstream inputFile_fin(filename);
 	ofstream scanner_file(filename+".scanner"); //스캐너 거친 결과 .scanner
 	ofstream symbol_fin(filename + ".symbol");	//최종 symbol table .symbol
@@ -49,7 +49,7 @@ int main() {
 	ifstream scanner_file_to_parse(filename + ".scanner"); //scanner의 결과로 parsing하기 위해 만듬
 	ofstream code_fin(filename + ".code");		//최종 출력 결과 .code
 
-	cout << "변경된 코드는" << endl;
+	cout << "Converted Code is" << endl;
 	string line;
 	while (!scanner_file_fin.eof()) {
 		getline(scanner_file_fin, line);
