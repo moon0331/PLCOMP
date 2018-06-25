@@ -5,18 +5,19 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <cstring>
 
 #include "scanner.h"
 #include "symboltable.h"
 
 using namespace std;
 
-const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };	//¿¹¾à¾î Àü¿ª ¼³Á¤
-const vector<string> vtype = { "INT", "CHAR" };									//¿¹¾à¾î Àü¿ª ¼³Á¤
+const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };	//ì˜ˆì•½ì–´ ì „ì—­ ì„¤ì •
+const vector<string> vtype = { "INT", "CHAR" };									//ì˜ˆì•½ì–´ ì „ì—­ ì„¤ì •
 
-extern SymbolTable symbolTable; //½Éº¼Å×ÀÌºí Àü¿ªÀ¸·Î ¼³Á¤ÇÑ °ÍÀ» ¿©±â¼­µµ ¾²°Ú´Ù´Â ÀÇ¹Ì·Î extern »ç¿ë
+extern SymbolTable symbolTable; //using extern to use symbolTable which is located in main.cpp
 
-bool var_len(const Information& a, const Information& b) { //sortingÀÇ ±âÁØ (1. symbolÀÇ ±æÀÌ ³»¸²Â÷¼ø, 2. ¾ËÆÄºª¼ø ¿À¸§Â÷¼ø)
+bool var_len(const Information& a, const Information& b) { //sorting (1. length of symbol name, 2. alphabetical order)
 	int a_len = (int)a.getname().length(), b_len = (int)b.getname().length();
 	if (a_len > b_len) {
 		return true;
@@ -28,45 +29,7 @@ bool var_len(const Information& a, const Information& b) { //sortingÀÇ ±âÁØ (1. 
 		return false;
 }
 
-string changeStringToID(string l) { //symbolÀ» $(number) ²Ã·Î ¹Ù²Þ
-	string line = l;
-	int num = symbolTable.getNum();
-	stable_sort(symbolTable.table.begin(), symbolTable.table.end(), var_len);
-	for (int i = 0; i < num; i++) {
-		string var = symbolTable.table[i].getname();
-		int var_len = (int)var.length();
-		string id = symbolTable.table[i].getID();
-		int id_len = (int)id.length();
-		size_t pos = 0;
-        cout<<"Check to change "<<var<<" to "<<id<<endl;
-        
-        int line_length = (int)line.length();
-        int num_semi_colon=0;
-        for(int j=0; j<line_length; j++){
-            if(line[j] == ';'){
-                num_semi_colon++;
-            }
-        }
-        
-        while(1){
-            pos = line.find(var, pos);
-            if(pos >= line_length+1){
-                break;
-            }
-            else{
-                line.replace(pos, var_len, id);
-                pos += id_len;
-            }
-        }
-//        while ((pos=line.find(var,pos)) != string::npos) {
-//            line.replace(pos, var_len, id);
-//            pos += id_len;
-//        }
-	}
-	return line;
-}
-
-bool isReservedWord(string token) { //ÀÌ tokenÀÌ ¿¹¾à¾îÀÎ°¡?
+bool isReservedWord(string token) { //is reserved word?
 	if (find(reserved.begin(), reserved.end(), token) != reserved.end()) {
 		return true;
 	}
@@ -76,132 +39,142 @@ bool isReservedWord(string token) { //ÀÌ tokenÀÌ ¿¹¾à¾îÀÎ°¡?
 	else return false;
 }
 
-vector<string> tokenize(string line) {
-    int line_length = (int)line.length();
-    vector<string> token;
-    
-    // EMPTY LINE
-    if(line_length==0)
-        return token;
-    
-    // LEADING SPACES REMOVAL
-    int pos=0;
-    for(pos=0; pos<line_length; pos++){
-        if(line[pos]!=' ')
-            break;
-    }
-    // pos: Index after leading spaces
-    
-	cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
-	//const regex reg("([0-9|A-z])*");
-	const regex reg("([A-z])*");
-//    int size = (int)line.size();
-    int seperate = 0;
-    for (int i = pos; i < line_length; i++) {
-        if (line[i] == ' ')
-            seperate++;
-    }
-    cout << "NUM of Empty String: " << seperate << endl;
-    
-//    string* token = new string[seperate+1];
-    string temp;
-	string type;
-//    char parenthesis;
-	int number=pos;
-    
-    // LINE SPLIT
-    // e.g. line = "  printf ( a, b ) int var;"
-    for(int i=pos; i<line_length; i++){
-        if(line[i] == '(' || line[i] =='{' || line[i] ==')' || line[i] =='}'){
-            string str(1, line[i]);
-            token.push_back(str);
-        }
-        else if(line.substr(i, 4) == "CHAR"){  // UPPERCASE
-            token.push_back("CHAR");
-        }
-        else if(line.substr(i, 3) == "INT"){
-            token.push_back("INT");
-        }
-        else if(line[i]==' '){
-            continue;
-        }
-        else{
-            int j;
-            for(j=i+1; j<line_length; j++){
-                if(line[j]==' ')
-                    break;
-            }
-            // i ~ j-1
-            string sub_str = line.substr(i, j-i);
-            token.push_back(sub_str);
-            i = j;
-        }
-    }
-    
-//    for (int i = pos ; i < line_length; i++) {
-//        if (line[i] == ' ') {
-//            cout << "token [" << number++ << "] : " << temp;
-//
-//            if (temp == "(" || temp=="{") {
-//                parenthesis = temp;
-//            }
-//            else if (temp == ")" || temp == "}") {
-//                parenthesis = "";
-//            }
-//
-//            if (temp == "INT" || temp == "CHAR") {
-//                type = temp;
-//            }
-//            else if (type == "" && parenthesis=="(") {
-//                type = "function parameter";
-//            }
-//            else if (regex_match(temp, reg) && !isReservedWord(temp)) {
-//                cout << "\t(symbol) ";
-//                if (!symbolTable.findName(temp)) {
-//                    string name = "$" + to_string(symbolTable.getNum());
-//                    symbolTable.push(Information(temp, type, name, "WORD") );
-//                }
-//                type = "";
-//            }
-//            temp = "";
-//            cout << endl;
-//        }
-//        else {
-//            temp += line[i];
-//        }
-//    }
-
-	cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
-
-	for (int i = 0; i < number; i++) {
-        cout << i << "th Token: " << token[i] <<endl;
-	}
-	return token;
-}
-
 void Scanner::scan(ifstream& input, ofstream& output) {
-	string line;
+
+	vector<Information>& symTable = symbolTable.table;
+
+	vector<string> v;
+	vector<string> code;
+	string line; 
+	const regex regNum("([0-9])*");
+	const regex regWord("([A-z])*");
 	cout << line << endl;
-
-	vector<string> aaa;
-
 	for (int i = 1; !input.eof(); i++) {
 		getline(input, line);
-		cout << "[" << i << "]" << line << " || NUM of Characters: " << line.length() << endl;
-		aaa = changeStringToToken(line);
+		code.push_back(line);
+		cout << "[" << i << "]" << line << " || NUM of Characters : " << line.length() << endl;
+		
+		char newLine[1024]; //temp
+		strcpy(newLine, line.c_str());
+		char* token = strtok(newLine, " ");
+		bool isOpen = false;
+		while (token) {
+			cout << token << " found";
+			string myWord(token);
+			if (!strcmp(token, "(")) isOpen = true;
+			if (!strcmp(token, ")")) isOpen = false;
+			if (regex_match(myWord, regWord) && find(v.begin(), v.end(), myWord) == v.end() && !isReservedWord(myWord)) {
+				string type = "";
+				if (isOpen) {
+					type = "function parameter";
+				}
+				/*else if (myWord=="INT" || myWord=="CHAR") {
+					type = myWord;
+				}*/
+				else if (v.size()>=1 && (v[v.size() - 1] == "INT" || v[v.size() - 1] == "CHAR")) {
+					type = v[v.size() - 1];
+				}
+				else {
+					type = "function name";
+				}
+				symTable.push_back(Information(myWord, type, "NAME", "WORD"));
+				cout << "....SYMBOL";
+			}
+			v.push_back(myWord);
+			cout << endl;
+			token = strtok(NULL, " ");
 
-		string newLine=changeStringToID(line);
+		}
 
-		cout << line << endl;
-		cout << newLine << endl;
-		output << newLine << endl;
-		//cout << line << "asdf" << endl;
-		//output << newLine << endl;
 	}
-}
 
-vector<string> Scanner::changeStringToToken(string line) {
-	vector<string> str = tokenize(line);
-	return str;
-	//return string(line);
+	// change symbols into word
+
+	sort(symTable.begin(), symTable.end(), var_len);
+
+	cout << "=========now symbols=========" << endl;
+
+	cout << "number of symbols : " << symTable.size() << endl;
+	for (int i = 0; i < (int)symTable.size(); i++) {
+		cout << "[" << symTable[i].getname() << "]" << endl;
+	}
+
+	cout << "============================" << endl;
+
+	// change token : symbol to word
+
+	for (int i = 0; i < (int)symTable.size(); i++) {
+		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
+			string var = symTable[i].getname();
+			string& myLine = code[lineNum];
+			auto pos = myLine.find(var, 0);
+			while (pos != string::npos) {
+				myLine.replace(pos, var.length(), "word");
+				cout << "line " << lineNum << " changed : " << myLine << endl;
+				pos += 4;
+				pos = myLine.find(var, pos);
+			}
+		}
+	}
+
+	//change token : reserved word and vtype word to word
+
+	for (int i = 0; i < (int)reserved.size(); i++) {
+		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
+			string var = reserved[i];
+			cout << "check : " << var << endl;
+			string& myLine = code[lineNum];
+			auto pos = myLine.find(var, 0);
+			while (pos != string::npos) {
+				cout << "ASDF" << endl;
+				myLine.replace(pos, var.length(), "word");
+				cout << "line " << lineNum << " changed : " << myLine << endl;
+				pos += 4;
+				pos = myLine.find(var, pos);
+			}
+		}
+	}
+
+	for (int i = 0; i < (int)vtype.size(); i++) {
+		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
+			string var = vtype[i];
+			cout << "ì²´í¬ : " << var << endl;
+			string& myLine = code[lineNum];
+			auto pos = myLine.find(var, 0);
+			while (pos != string::npos) {
+				cout << "ASDF" << endl;
+				myLine.replace(pos, var.length(), "word");
+				cout << "line " << lineNum << " changed : " << myLine << endl;
+				pos += 4;
+				pos = myLine.find(var, pos);
+			}
+		}
+	}
+
+	// change token : number to num
+
+	for (int i = 0; i < (int)v.size(); i++) {
+		for (int c = 0; c < (int)code.size(); c++) {
+			string& num = v[i];
+			string& myLine = code[c];
+			if (regex_match(num, regNum)) {
+				auto pos = myLine.find(num, 0);
+				while (pos != string::npos) {
+					myLine.replace(pos, num.length(), "num");
+					cout << "line " << c << " changed : " << myLine << endl;
+					pos += 3;
+					pos = myLine.find(num, pos);
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < code.size(); i++) {
+		cout << code[i] << endl;
+		output << code[i] << endl;	//write data in output
+	}
+
+	for (int i = 0; i < (int)v.size(); i++) {
+		cout << v[i] << ", " << v[i].length() << endl;
+	}
 }
