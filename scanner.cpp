@@ -128,7 +128,7 @@ vector<string> tokenize(string line) {
         else{
             int j;
             for(j=i+1; j<line_length; j++){
-                if(line[j]==' ')
+                if(line[j]==' ' || line[j]=='(' || line[j]=='{' || line[j]=='+' || line[j] == '-')  // e.g. printf(age);
                     break;
             }
             // i ~ j-1
