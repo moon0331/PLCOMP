@@ -15,7 +15,7 @@ State::State() {
 }
 
 State::State(int num) : stateNum(num) {
-	cout << "state »ı¼ºÀÚ " << num << endl;
+    cout << "state #" << num << endl;
 }
 
 void State::setActionTable(string s, actNum a) {

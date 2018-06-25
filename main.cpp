@@ -20,16 +20,17 @@ int main(int argc, const char *argv[]) {
 	cout << filename;*/
 
 	const string compilerName = "compiler2014 ";
-	string filename;
-    cout<<"FILE NAME: ";
-	cin >> filename;
-	if (compilerName+filename != "compiler2014 test") { //일단 test만 가능하도록 처리함!
-        cout << "ERROR: wrong file name" << endl;
-		return 0;
-	}
+	string filename = "test";
+//    cout<<"FILE NAME: ";
+//    cin >> filename;
+//    if (compilerName+filename != "compiler2014 test") { //일단 test만 가능하도록 처리함!
+//        cout << "ERROR: wrong file name" << endl;
+//        return 0;
+//    }
     cout << compilerName + filename << ": INPUT FILE NAME" << endl;
 	ifstream inputFile_fin;
-    inputFile_fin.open(filename);
+//    inputFile_fin.open(filename);
+    inputFile_fin.open("/Users/BaeHaneul/Developer/PLCOMP/PLCOMP/test");  // XCODE needs the full path.
     
 	ofstream scanner_file; //스캐너 거친 결과 .scanner
     scanner_file.open(filename+".scanner");
@@ -76,9 +77,8 @@ int main(int argc, const char *argv[]) {
 	}
 	scanner_file_fin.close();
 
-	Parser parser;		//parser 객체
-
-	parser.parse(scanner_file_to_parse, code_fin);
+//    Parser parser;        //parser 객체
+//    parser.parse(scanner_file_to_parse, code_fin);
 
 	inputFile_fin.close();
 	scanner_file_to_parse.close();
