@@ -1,19 +1,20 @@
-2018-1 ÇÁ·Î±×·¡¹Ö¾ğ¾î+ÄÄÆÄÀÏ·¯ ÇÁ·ÎÁ§Æ®
+# PLCOMP
+2018-1 í”„ë¡œê·¸ë˜ë°ì–¸ì–´+ì»´íŒŒì¼ëŸ¬ í”„ë¡œì íŠ¸
 
-# ¼Ò½º ÆÄÀÏ ¼³¸í
-1. main.cpp´Â ¸ŞÀÎ ½ÇÇà °úÁ¤
-2. parser.cpp´Â class ParserÀÇ ¸Ş¼­µå¿Í ÇÊ¿äÇÑ ÇÔ¼ö Á¤ÀÇ
-3. scanner.cpp´Â class ScannerÀÇ ¸Ş¼­µå¿Í ÇÊ¿äÇÑ ÇÔ¼ö Á¤ÀÇ
-4. symboltable.cpp´Â class SymbolTableÀÇ ¸Ş¼­µå¿Í ÇÊ¿äÇÑ ÇÔ¼ö Á¤ÀÇ
-5. instruction.cpp´Â class InstructionÀÇ ¸Ş¼­µå¿Í ÇÊ¿äÇÑ ÇÔ¼ö Á¤ÀÇ
+# ì†ŒìŠ¤ íŒŒì¼
 
-# Çì´õ ÆÄÀÏ ¼³¸í
-1. parser.h´Â class ParserÀÇ ¼±¾ğ
-2. scanner.h´Â class ScannerÀÇ ¼±¾ğ
-3. symboltable.h´Â class SymbolTable°ú ÀÌ¿¡ µé¾î°¡´Â class InformationÀÇ ¼±¾ğ
-4. instruction.h´Â class InstructionÀÇ ¼±¾ğ
+main.cpp : ë©”ì¸ ì‹¤í–‰ ê³µê°„
 
-# ÇöÀç »óÈ²
-ÇöÀç ÀÔ·ÂÇÏ´Â ÆÄÀÏÀÇ ÀÌ¸§Àº test·Î ÇØ¾ß¸¸ ÀÛµ¿µÇµµ·Ï ¼³Á¤µÊ.
-test ÆÄÀÏ¿¡ ÄÚµå¸¦ ÀÔ·ÂÇÏ¸é, scanner°¡ ÀÌ¸¦ ÀÎ½ÄÇÏ¿© test.scanner ÆÄÀÏÀ» »ı¼ºÇÔ.
-scanner°¡ ÇÔ¼ö¸í ¹× º¯¼ö¸íÀ» $(¼ıÀÚ) ²Ã·Î ¹Ù²Ù¾úÀ¸¹Ç·Î, parser´Â test.scanner¸¦ ÀĞ¾î¿Í¼­ ÀÛµ¿ÇØ¾ß ÇÔ.
+parser.cpp : class Parserì— í•´ë‹¹í•˜ëŠ” ë©”ì„œë“œë“¤ì˜ ì •ì˜ ê³µê°„
+
+scanner.cpp : class Scannerì— í•´ë‹¹í•˜ëŠ” ë©”ì„œë“œë“¤ì˜ ì •ì˜ ê³µê°„
+
+# í—¤ë” íŒŒì¼
+
+parser.h : class Parser ì„ ì–¸
+
+scanner.h : class Scanner ì„ ì–¸
+
+#ì£¼ì˜ì‚¬í•­
+
+ì„ ì–¸ì€ í—¤ë”, ì •ì˜ëŠ” CPP

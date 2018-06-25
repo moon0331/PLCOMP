@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdio>
 
 #include "parser.h"
 
@@ -13,14 +14,14 @@
 enum ENUM_LR_TABLE {
     STATE, WORD, OPEN_P, CLOSE_P, TYPE, SEMI, COMMA, INT, CHAR, OPEN_B, CLOSE_B, IF,
     THEN, ELSE, WHILE, EQUAL, RETURN, BIGGER, SMALLER, PLUS, MULTIPLY, NUM, DOLLAR,
-    P, DS, D, WS, V, B, SL, S, C, E, T, F
+    P, DS, D, WS, V, B, SL, S, C, E, T, F, ACC
 };
 
 string enum_to_str[] = {
     "STATE", "word", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF",
     "THEN", "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "$",
     "prog", "decls", "decl", "words", "vtype", "block", "slist", "stat", "cond",
-    "expr", "term", "fact"
+    "expr", "term", "fact", "acc"
 };
 
 int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
@@ -67,10 +68,10 @@ vector<string> tok(string line) {
 	return v;
 }
 
-Parser::Parser() {
-    // TRANSITION TABLE CREATION //////////////////////////////////////////////////////////////////////////
+void create_LR_TABLE(){
     cout<<"READING TABLE FROM CSV"<<endl;
-    ifstream csv_read("/Users/BaeHaneul/Developer/PLCOMP/PLCOMP/Transition_table.csv");
+    
+    ifstream csv_read("Transition_table.csv"); // CHANGE THE PATH HERE
     if(csv_read.is_open()){
         string line;
         while (!csv_read.eof()) {
@@ -118,12 +119,17 @@ Parser::Parser() {
                 else{  // line[i] is a number for a GOTO TABLE
                     int goto_num;
                     for(j=i+1; j<line_length; j++){
-                        if(j==','){
+                        if(line[j]==','){
                             j--;
                             break;
                         }
                     }
-                    goto_num = stoi(line.substr(i, j-i+1));
+                    string sub_str = line.substr(i, j-i+1);
+                    if(sub_str!="acc"){
+                        goto_num = stoi(sub_str);
+                    }else{  // acc
+                        goto_num=777;
+                    }
                     LR_TABLE[state_num][pos] = goto_num;
                     cout<<"STATE: "<<state_num<<" / GOTO: "<<enum_to_str[pos]<<" / GOTO_NUM: "<<goto_num<<endl;
                     i=j+1;
@@ -134,12 +140,15 @@ Parser::Parser() {
         cout<<"FAILED TO OPEN CSV FILE."<<endl;
         exit(0);
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////
+}
+
+Parser::Parser() {
+    create_LR_TABLE();
     
 	cout << "parser INITIALIZATION" << endl;
 	sstack.push({ 0,"$" });
 	cout << "STACK INITIALIZATION" << endl;
-	ifstream file("Transition Table.csv");
+	ifstream file("Transition_table.csv");
 
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		stateArr.push_back(State(i));
@@ -152,18 +161,15 @@ Parser::Parser() {
 		int idx = 0;
 		while (idx < ActionToken.size()) {
 			cout << endl;
-			//cout << idx << "사이즈" << endl;
 			cout << idx << "th: [" << ActionToken[idx] << "], [" << str[idx] << "]" << endl;
-			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
 			stateArr[i].getActionTable().insert(pair<string, actNum>(ActionToken[idx], str[idx]));
 			idx++;
 		}
-		cout << "Put into goto" << endl;
+		cout << "\nPut into goto" << endl;
 		while (idx < ActionToken.size() + GotoToken.size()) {
 			int val = idx - (int)ActionToken.size();
 			cout << "idx = " << idx << ", val = " << val << endl;
 			cout << idx << "th : [" << GotoToken[val] << "], [" << str[idx] << "]" << endl;
-			//cout << stateArr[i].getActionTable().size()<<"사이즈는 " << endl;
 			stateArr[i].getGotoTable().insert(pair<string, int>(GotoToken[val], atoi(str[idx].c_str()))); //atoi 수정 필요
 			idx++;
 		}

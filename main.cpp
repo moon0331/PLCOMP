@@ -30,7 +30,8 @@ int main(int argc, const char *argv[]) {
     cout << compilerName + filename << ": INPUT FILE NAME" << endl;
 	ifstream inputFile_fin;
 //    inputFile_fin.open(filename);
-    inputFile_fin.open("test");  // XCODE needs the full path. .......................... please modify path!
+    inputFile_fin.open("test");  // XCODE needs the full
+    // XCODE needs the fullpath. .......................... please modify path!
     
 	ofstream scanner_file; //스캐너 거친 결과 .scanner
     scanner_file.open(filename+".scanner");
