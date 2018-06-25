@@ -86,5 +86,5 @@ int main(int argc, const char *argv[]) {
 	scanner_file_to_parse.close();
 	code_fin.close();
 	symbol_fin.close();
-	return 0;
+	return 0;;
 }
