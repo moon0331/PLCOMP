@@ -7,7 +7,7 @@ using namespace std;
 
 class Scanner {
 public:
-	void scan(ifstream& input, ofstream& output);
+	vector<string> scan(ifstream& input, ofstream& output);
 	//string changeStringToToken(string line);
 	vector<string> changeStringToToken(string line);
 };
