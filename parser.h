@@ -10,9 +10,9 @@
 
 using namespace std;
 
-const string transition[] = {
-	"", 
-};
+//const string transition[] = {
+//    "",
+//};
 
 typedef struct tuple {
 	int stateNum;
@@ -24,11 +24,17 @@ typedef struct _grammar{
     vector<string> right_side;
 }Grammar;
 
+typedef struct _node{
+    string val;
+    struct _node *next;
+}Node;
+
 class Parser {
 private:
     map<string, int> MAP_LR_TABLE;
     int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
     vector<Grammar> grammars;
+    Node* parseTreeRoot;
     
 	string str;			// string
 	stack<Tuple> sstack;
@@ -38,7 +44,13 @@ public:
 	void parse(ifstream& scanFile, ofstream& code, vector<string>& inputTape);
 	void shift();
 	void reduce();
+    bool isFinalState();
+    
     void create_grammar();
     void create_LR_TABLE();
-	bool isFinalState();
+	
+    // FOR PARSE TREE //////////////////////////////////////////////////
+    void create_parseTree();
+    void add_parseTreeNode(string str);  // dynamic allocation is needed.
+    Node* get_parseTree();
 };
