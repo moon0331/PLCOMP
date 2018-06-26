@@ -39,25 +39,26 @@ bool isReservedWord(string token) { //is reserved word?
 	else return false;
 }
 
-void Scanner::scan(ifstream& input, ofstream& output) {
-
+vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	vector<Information>& symTable = symbolTable.table;
-
 	vector<string> v;
 	vector<string> code;
-	string line; 
+	string line;
+
 	const regex regNum("([0-9])*");
 	const regex regWord("([A-z])*");
+
 	cout << line << endl;
+
 	for (int i = 1; !input.eof(); i++) {
 		getline(input, line);
 		code.push_back(line);
 		cout << "[" << i << "]" << line << " || NUM of Characters : " << line.length() << endl;
-		
 		char newLine[1024]; //temp
 		strcpy(newLine, line.c_str());
 		char* token = strtok(newLine, " ");
 		bool isOpen = false;
+
 		while (token) {
 			cout << token << " found";
 			string myWord(token);
@@ -68,33 +69,33 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 				if (isOpen) {
 					type = "function parameter";
 				}
+
 				/*else if (myWord=="INT" || myWord=="CHAR") {
-					type = myWord;
+				type = myWord;
 				}*/
-				else if (v.size()>=1 && (v[v.size() - 1] == "INT" || v[v.size() - 1] == "CHAR")) {
+
+				else if (v.size() >= 1 && (v[v.size() - 1] == "INT" || v[v.size() - 1] == "CHAR")) {
 					type = v[v.size() - 1];
 				}
 				else {
 					type = "function name";
 				}
+
 				symTable.push_back(Information(myWord, type, "NAME", "WORD"));
 				cout << "....SYMBOL";
 			}
 			v.push_back(myWord);
 			cout << endl;
 			token = strtok(NULL, " ");
-
 		}
-
 	}
 
 	// change symbols into word
-
 	sort(symTable.begin(), symTable.end(), var_len);
 
 	cout << "=========now symbols=========" << endl;
-
 	cout << "number of symbols : " << symTable.size() << endl;
+
 	for (int i = 0; i < (int)symTable.size(); i++) {
 		cout << "[" << symTable[i].getname() << "]" << endl;
 	}
@@ -102,7 +103,6 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 	cout << "============================" << endl;
 
 	// change token : symbol to word
-
 	for (int i = 0; i < (int)symTable.size(); i++) {
 		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
 			string var = symTable[i].getname();
@@ -118,7 +118,6 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 	}
 
 	//change token : reserved word and vtype word to word
-
 	for (int i = 0; i < (int)reserved.size(); i++) {
 		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
 			string var = reserved[i];
@@ -152,7 +151,6 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 	}
 
 	// change token : number to num
-
 	for (int i = 0; i < (int)v.size(); i++) {
 		for (int c = 0; c < (int)code.size(); c++) {
 			string& num = v[i];
@@ -169,12 +167,28 @@ void Scanner::scan(ifstream& input, ofstream& output) {
 		}
 	}
 
+	vector<string> inputTape;
+
 	for (int i = 0; i < code.size(); i++) {
 		cout << code[i] << endl;
 		output << code[i] << endl;	//write data in output
+		char linee[1024];
+		strcpy(linee, code[i].c_str());
+		char* tok = strtok(linee, " ");
+		while (tok) {
+			cout << tok << "토큰 입력" << endl;
+			inputTape.push_back(string(tok));
+			tok = strtok(NULL, " ");
+		}
 	}
 
 	for (int i = 0; i < (int)v.size(); i++) {
 		cout << v[i] << ", " << v[i].length() << endl;
 	}
+
+	for (int i = 0; i < inputTape.size(); i++) {
+		cout << "[" << inputTape[i] << "] ";
+	}
+
+	return inputTape;
 }
