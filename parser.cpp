@@ -6,75 +6,79 @@
 
 #include "parser.h"
 
-#define NUM_OF_STATES 141
-#define NUM_OF_ACTION 22
-#define NUM_OF_GOTO   12
-#define NUM_OF_COL    35
+#define NUM_OF_COL    38
+#define NUM_OF_STATES 177
 
-// LENGTH of LR_TABLE: 35
-enum ENUM_LR_TABLE {
-    STATE, WORD, OPEN_P, CLOSE_P, TYPE, SEMI, COMMA, INT, CHAR, OPEN_B, CLOSE_B, IF,
-    THEN, ELSE, WHILE, EQUAL, RETURN, BIGGER, SMALLER, PLUS, MULTIPLY, NUM, DOLLAR,
-    P, DS, D, WS, V, B, SL, S, C, E, T, F, ACC
-};
+// LENGTH of LR_TABLE: 38
+//enum ENUM_LR_TABLE {
+//    STATE, OPEN_P, CLOSE_P, TYPE, SEMI, COMMA, INT, CHAR, OPEN_B, CLOSE_B, IF,
+//    THEN, ELSE, WHILE, EQUAL, RETURN, BIGGER, SMALLER, PLUS, MULTIPLY, N, W, DOLLAR,
+//    P, DS, D, WS, V, B, SL, S, C, E, T, F, ACC
+//};
 
-map<string, int> MAP_LR_TABLE;
+//map<string, int> MAP_LR_TABLE;
 
 string enum_to_str[] = {
-    "STATE", "word", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF",
-    "THEN", "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "$",
+    "STATE", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF", "THEN",
+    "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "word", "$",
     "prog", "decls", "decl", "words", "vtype", "block", "slist", "stat", "cond",
-    "expr", "term", "fact", "acc"
+    "expr", "term", "fact", "n", "w", "acc"
 };
 
-int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
+//int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
 
-const vector<string> ActionToken = {
-	"word",		"(",		")",		"type",		";",
-	",",		"INT",		"CHAR",		"{",		"}",
-	"IF",		"THEN",		"ELSE",		"WHILE",	"=",
-	"RETURN",	">",		"<",		"+",		"*",
-	"num",		"$"
-};
 
-const vector<string> GotoToken = {
-	"prog",		"decls",	"decl",		"words",	"vtype",
-	"block",	"slist",	"stat",		"cond",		"expr",
-	"term",		"fact"
-};
+//const vector<string> ActionToken = {
+//    "word",        "(",        ")",        "type",        ";",
+//    ",",        "INT",        "CHAR",        "{",        "}",
+//    "IF",        "THEN",        "ELSE",        "WHILE",    "=",
+//    "RETURN",    ">",        "<",        "+",        "*",
+//    "num",        "$"
+//};
+//
+//const vector<string> GotoToken = {
+//    "prog",        "decls",    "decl",        "words",    "vtype",
+//    "block",    "slist",    "stat",        "cond",        "expr",
+//    "term",        "fact"
+//};
 
-extern vector<State> stateArr;
+//extern vector<State> stateArr;
 
-vector<string> tok(string line) {
-	vector<string> v;
-	int len = (int)line.length();
-	string s = "";
-	int count = 0;
-	for (int i = 0; i <= len; i++) {
-		if (line[i] == ',' || line[i]=='\0') {
-			v.push_back(s);
-			s = "";
-			count++;
-		}
-		else {
-			s += line[i];
-		}
-	}
-	cout << count<<"th"<<endl;
-	v.erase(v.begin());
-	int size = (int)v.size(); //34
-	int newSize = (int)ActionToken.size() + (int)GotoToken.size(); //34
-	cout << size << newSize << endl;
-	for (int i = 0; i < size; i++) {
-		cout << "[" << i << "] " << v[i] << " | ";
-	}
-	return v;
-}
+//vector<string> tok(string line) {
+//    vector<string> v;
+//    int len = (int)line.length();
+//    string s = "";
+//    int count = 0;
+//    for (int i = 0; i <= len; i++) {
+//        if (line[i] == ',' || line[i]=='\0') {
+//            v.push_back(s);
+//            s = "";
+//            count++;
+//        }
+//        else {
+//            s += line[i];
+//        }
+//    }
+//    cout << count<<"th"<<endl;
+//    v.erase(v.begin());
+//    int size = (int)v.size(); //34
+//    int newSize = (int)ActionToken.size() + (int)GotoToken.size(); //34
+//    cout << size << newSize << endl;
+//    for (int i = 0; i < size; i++) {
+//        cout << "[" << i << "] " << v[i] << " | ";
+//    }
+//    return v;
+//}
 
-void create_LR_TABLE(){
+void Parser::create_LR_TABLE(){
     cout<<"READING TABLE FROM CSV"<<endl;
+    for(int i=0; i<NUM_OF_STATES; i++){
+        for(int j=0; j<NUM_OF_COL; j++){
+            LR_TABLE[i][j] = 0;
+        }
+    }
     
-    ifstream csv_read("Transition_table.csv"); // CHANGE THE PATH HERE
+    ifstream csv_read("Transition_table-v2.csv"); // CHANGE THE PATH HERE
     if(csv_read.is_open()){
         string line;
         while (!csv_read.eof()) {
@@ -87,7 +91,7 @@ void create_LR_TABLE(){
             for(i=0; i<line_length; i++){
                 if(line[i]==','){
                     state_num = stoi(line.substr(0, i));
-                    LR_TABLE[state_num][STATE] = state_num;
+                    LR_TABLE[state_num][0] = state_num;
                     i++;
                     break;
                 }
@@ -128,10 +132,12 @@ void create_LR_TABLE(){
                         }
                     }
                     string sub_str = line.substr(i, j-i+1);
-                    if(sub_str!="acc"){
+                    if(sub_str!="acc" && sub_str!="\r" && sub_str!="\n"){
                         goto_num = stoi(sub_str);
-                    }else{  // acc
+                    }else if(sub_str=="acc"){  // acc
                         goto_num=777;
+                    }else{  // \r or \n
+                        break;
                     }
                     LR_TABLE[state_num][pos] = goto_num;
 //                    cout<<"STATE: "<<state_num<<" / GOTO: "<<enum_to_str[pos]<<" / GOTO_NUM: "<<goto_num<<endl;
@@ -145,8 +151,57 @@ void create_LR_TABLE(){
     }
 }
 
+void Parser::create_grammar(){
+    grammars.push_back(Grammar{"prog", vector<string>{"vtype", "w", "(", "words", ")", "block"}});
+    
+    grammars.push_back(Grammar{"decls", vector<string>{"decls", "decl"}});
+    grammars.push_back(Grammar{"decls", vector<string>{""}});
+    
+    grammars.push_back(Grammar{"decl", vector<string>{"type", "words", ";"}});
+    
+    grammars.push_back(Grammar{"words", vector<string>{"words", ",", "w"}});
+    grammars.push_back(Grammar{"words", vector<string>{"w"}});
+    
+    grammars.push_back(Grammar{"vtype", vector<string>{"INT"}});
+    grammars.push_back(Grammar{"vtype", vector<string>{"CHAR"}});
+    grammars.push_back(Grammar{"vtype", vector<string>{""}});
+    
+    grammars.push_back(Grammar{"block", vector<string>{"{", "decls", "slist", "}"}});
+    grammars.push_back(Grammar{"block", vector<string>{""}});
+    
+    grammars.push_back(Grammar{"slist", vector<string>{"slist", "stat"}});
+    grammars.push_back(Grammar{"slist", vector<string>{"stat"}});
+    
+    grammars.push_back(Grammar{"stat", vector<string>{"block"}});
+    grammars.push_back(Grammar{"stat", vector<string>{"IF", "cond", "THEN", "block", "ELSE", "block"}});
+    grammars.push_back(Grammar{"stat", vector<string>{"WHILE", "cond", "block"}});
+    grammars.push_back(Grammar{"stat", vector<string>{"w", "=", "cond", ";"}});
+    grammars.push_back(Grammar{"stat", vector<string>{"RETURN", "cond", ";"}});
+    grammars.push_back(Grammar{"stat", vector<string>{""}});
+    
+    grammars.push_back(Grammar{"cond", vector<string>{"expr", ">", "expr"}});
+    grammars.push_back(Grammar{"cond", vector<string>{"expr", "<", "expr"}});
+    
+    grammars.push_back(Grammar{"expr", vector<string>{"term"}});
+    grammars.push_back(Grammar{"expr", vector<string>{"term", "+", "term"}});
+    
+    grammars.push_back(Grammar{"term", vector<string>{"fact"}});
+    grammars.push_back(Grammar{"term", vector<string>{"fact", "*", "fact"}});
+    
+    grammars.push_back(Grammar{"fact", vector<string>{"n"}});
+    grammars.push_back(Grammar{"fact", vector<string>{"w"}});
+    
+    grammars.push_back(Grammar{"n", vector<string>{"n", "num"}});
+    grammars.push_back(Grammar{"n", vector<string>{""}});
+    
+    grammars.push_back(Grammar{"w", vector<string>{"w", "word"}});
+    grammars.push_back(Grammar{"w", vector<string>{""}});
+}
+
 Parser::Parser() {
     create_LR_TABLE();
+    create_grammar();
+    
     for(int i=0; i<NUM_OF_COL; i++){
         MAP_LR_TABLE[enum_to_str[i]] =  i;
     }
@@ -155,7 +210,7 @@ Parser::Parser() {
 	sstack.push({ 0,"$" });
     
     /*
-	ifstream file("Transition_table.csv");
+	ifstream file("Transition_table-v2.csv");
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		stateArr.push_back(State(i));
 	}
@@ -189,11 +244,11 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& input
     vector<string>::iterator it = inputTape.begin();
     int current_state = 0;
     // SHIFT_REDUCE PARSING
-    while(1){
+    while(it!=end(inputTape)){
         string handle = *it;
         int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
-        
         cout<<handle<<endl;
+        it = next(it, 1);
     }
 
 //    while (!scanFile.eof()) {
