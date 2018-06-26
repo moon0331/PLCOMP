@@ -18,11 +18,11 @@ typedef struct tuple {
 
 class Parser {
 private:
-	string str;			// 처리해야 할 string
+	string str;			// string
 	stack<Tuple> sstack;
-	State* state;		// 현재 state 가리킴
+	State* state;		// present state
 public:
-	Parser();
+	Parser(vector<string>& inputTape); //input tape
 	void parse(ifstream& scanFile, ofstream& code);
 	void shift();
 	void reduce();
