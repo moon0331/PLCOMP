@@ -33,7 +33,7 @@ int main(int argc, const char *argv[]) {
 
 	//    inputFile_fin.open(filename);
 
-	inputFile_fin.open("test");  // XCODE needs the full
+	inputFile_fin.open(filename);  // XCODE needs the full
 								 // XCODE needs the fullpath. .......................... please modify path!
 
 	ofstream scanner_file; //스캐너 거친 결과 .scanner
@@ -84,8 +84,8 @@ int main(int argc, const char *argv[]) {
 
 	scanner_file_fin.close();
 
-	Parser parser(inputTape);        //parser 객체
-						  //parser.parse(scanner_file_to_parse, code_fin);
+    Parser parser;        //parser 객체
+    parser.parse(scanner_file_to_parse, code_fin, inputTape);
 
 	inputFile_fin.close();
 	scanner_file_to_parse.close();

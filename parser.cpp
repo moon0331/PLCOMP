@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <cstdio>
+#include <map>
 
 #include "parser.h"
 
@@ -16,6 +17,8 @@ enum ENUM_LR_TABLE {
     THEN, ELSE, WHILE, EQUAL, RETURN, BIGGER, SMALLER, PLUS, MULTIPLY, NUM, DOLLAR,
     P, DS, D, WS, V, B, SL, S, C, E, T, F, ACC
 };
+
+map<string, int> MAP_LR_TABLE;
 
 string enum_to_str[] = {
     "STATE", "word", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF",
@@ -109,7 +112,7 @@ void create_LR_TABLE(){
                         action_num = -stoi(line.substr(i+1, j-i+1));
                     }
                     LR_TABLE[state_num][pos] = action_num;
-                    cout<<"STATE: "<<state_num<<" / ACTION: "<<enum_to_str[pos]<<" / ACTION_NUM: "<<action_num<<endl;
+//                    cout<<"STATE: "<<state_num<<" / ACTION: "<<enum_to_str[pos]<<" / ACTION_NUM: "<<action_num<<endl;
                     i = j+1;
                 }
                 else if(line[i]==','){
@@ -131,7 +134,7 @@ void create_LR_TABLE(){
                         goto_num=777;
                     }
                     LR_TABLE[state_num][pos] = goto_num;
-                    cout<<"STATE: "<<state_num<<" / GOTO: "<<enum_to_str[pos]<<" / GOTO_NUM: "<<goto_num<<endl;
+//                    cout<<"STATE: "<<state_num<<" / GOTO: "<<enum_to_str[pos]<<" / GOTO_NUM: "<<goto_num<<endl;
                     i=j+1;
                 }
             }
@@ -144,16 +147,18 @@ void create_LR_TABLE(){
 
 Parser::Parser() {
     create_LR_TABLE();
+    for(int i=0; i<NUM_OF_COL; i++){
+        MAP_LR_TABLE[enum_to_str[i]] =  i;
+    }
     
 	cout << "parser INITIALIZATION" << endl;
 	sstack.push({ 0,"$" });
-	cout << "STACK INITIALIZATION" << endl;
+    
+    /*
 	ifstream file("Transition_table.csv");
-
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		stateArr.push_back(State(i));
 	}
-
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		string line;
 		getline(file, line);
@@ -177,34 +182,34 @@ Parser::Parser() {
 	}
 	cout << "BASIC END" << endl;
 	file.close();
+     */
 }
 
-void Parser::parse(ifstream& scanFile, ofstream& codeFile) {
+void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& inputTape) {
+    vector<string>::iterator it = inputTape.begin();
+    int current_state = 0;
+    // SHIFT_REDUCE PARSING
+    while(1){
+        string handle = *it;
+        int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
+        
+        cout<<handle<<endl;
+    }
 
-	while (!scanFile.eof()) {
-		string line;
-		getline(scanFile, line);
-		str += line;
-	}
-	str += "$";
-	cout << str << endl; //str 만듬
-
-	while (true) {
-		Tuple tuple = sstack.top();
-		int stateNo = tuple.stateNum;
-		string s_r = tuple.str;
-		break;
-	}
-	//shift, reduct 처리 해야함
-	//현재 state들은 stateArr에서 관장함. state가 변할때마다 State* state가 가리키는 방향을 바꾸면 됨.
-	//shift reduce 구현 어떻게? -> stack 사용. (처음에 {0,$} 담겨있음. 이는 Tuple이라는 구조체)
-	//shift, reduce 구현......
-	/*while (어떤 조건) {
-		if(어떤 조건)
-			state = shift(); //shift의 반환형을 State*로 바꾸면?
-		else if(어떤 조건)
-			reduce();
-	}*/
+//    while (!scanFile.eof()) {
+//        string line;
+//        getline(scanFile, line);
+//        str += line;
+//    }
+//    str += "$";
+//    cout << str << endl;
+//
+//    while (true) {
+//        Tuple tuple = sstack.top();
+//        int stateNo = tuple.stateNum;
+//        string s_r = tuple.str;
+//        break;
+//    }
 }
 
 void Parser::shift() {

@@ -22,8 +22,8 @@ private:
 	stack<Tuple> sstack;
 	State* state;		// present state
 public:
-	Parser(vector<string>& inputTape); //input tape
-	void parse(ifstream& scanFile, ofstream& code);
+	Parser(); //input tape
+	void parse(ifstream& scanFile, ofstream& code, vector<string>& inputTape);
 	void shift();
 	void reduce();
 	bool isFinalState();

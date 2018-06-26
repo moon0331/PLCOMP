@@ -1,0 +1,4 @@
+printf(word, b) {
+    word word < b;
+}
+
