@@ -248,7 +248,13 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& input
         string handle = *it;
         int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
         cout<<handle<<endl;
-        it = next(it, 1);
+		if (nextDestination >= 0){
+			shift(nextDestination, handle);
+			it = next(it, 1);
+		}
+		else {
+			reduce(nextDestination);
+		}
     }
 
 //    while (!scanFile.eof()) {
@@ -267,21 +273,35 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& input
 //    }
 }
 
-void Parser::shift() {
-	string s = "";
+void Parser::shift(int nextDestination, string handle) {
+	/*string s = "";
 	int i = 0;
 	while (str[0] != ' ') {
-		str = str.substr(1);
+	str = str.substr(1);
 	}
 	for (i = 0; str[i] != ' '; i++) {
-		s += str[i];
+	s += str[i];
 	}
 	str = str.substr(i+1);
-	sstack.push({});
+	sstack.push({});*/
+
+	sstack.push({ nextDestination, handle });
 }
 
-void Parser::reduce() {
+void Parser::reduce(int nextDestination) {
+	int current_state = abs(nextDestination);
+	string lhs = grammars[current_state].left_side;
+	vector<string> rhs = grammars[current_state].right_side;
+	int size = rhs.size();
 
+	while (size > 0) {
+		sstack.pop();
+		size--;
+	}
+	sstack.pop();
+	int top_original = sstack.top().stateNum;
+	current_state = LR_TABLE[top_original][MAP_LR_TABLE.find(lhs)->second];
+	sstack.push({current_state, grammars[current_state].left_side });
 }
 
 bool Parser::isFinalState() {

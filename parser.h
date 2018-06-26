@@ -42,8 +42,8 @@ private:
 public:
 	Parser(); //input tape
 	void parse(ifstream& scanFile, ofstream& code, vector<string>& inputTape);
-	void shift();
-	void reduce();
+	void shift(int nextDestination, string handle);
+	void reduce(int nextDestination);
     bool isFinalState();
     
     void create_grammar();
