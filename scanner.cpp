@@ -89,6 +89,8 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	vector<string> code;
 	string line;
 
+	vector<string> inputTape; //return value
+
 	const regex regNum("([0-9])*");
 	const regex regWord("([A-z])*");
 
@@ -116,6 +118,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 			else {
 				real_tokens.push_back(string(token));
 			}
+			inputTape.insert(inputTape.end(), real_tokens.begin(), real_tokens.end());
 			for (int i = 0; i < (int)real_tokens.size(); i++) {
 				string myWord = real_tokens[i];
 				if (!strcmp(myWord.c_str(), "(")) isOpen = true;
@@ -189,21 +192,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 					pos = myLine.find(num, pos);
 				}
 			}
-		}
-	}
-
-	vector<string> inputTape;
-
-	for (int i = 0; i < code.size(); i++) {
-		cout << code[i] << endl;
-		output << code[i] << endl;	//write data in output
-		char linee[1024];
-		strcpy(linee, code[i].c_str());
-		char* tok = strtok(linee, " ");
-		while (tok) {
-			cout << tok << "토큰 입력" << endl;
-			inputTape.push_back(string(tok));
-			tok = strtok(NULL, " ");
 		}
 	}
 
