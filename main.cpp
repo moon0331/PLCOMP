@@ -27,6 +27,7 @@ int main(int argc, const char *argv[]) {
 	//        cout << "ERROR: wrong file name" << endl;
 	//        return 0;
 	//    }
+	//
 
 	cout << compilerName + filename << ": INPUT FILE NAME" << endl;
 	ifstream inputFile_fin;
