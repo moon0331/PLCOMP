@@ -81,6 +81,15 @@ int main(int argc, const char *argv[]) {
 		getline(scanner_file_fin, line);
 		cout << line << endl;
 	}
+	
+	
+	ofstream sym(filename + ".symbol");  //symbol table file
+
+	for (int i = 0; i < symbolTable.table.size(); i++) {
+		sym << symbolTable.table[i] << endl;
+	}
+
+	sym.close(); //write finished
 
 	scanner_file_fin.close();
 
