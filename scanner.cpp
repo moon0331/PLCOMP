@@ -138,7 +138,11 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 						type = inputTape[inputTape.size() - 1];
 					}
 					else {
-						type = "function name";
+						type = "function name"; // is it right??????????????
+					}
+
+					if (inputTape[inputTape.size()-1]=="(") {
+						symTable[0].addType(", function name");
 					}
 
 					symTable.push_back(Information(myWord, type, "NAME", "WORD"));
