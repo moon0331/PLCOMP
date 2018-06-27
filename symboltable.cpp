@@ -3,7 +3,7 @@
 
 using namespace std;
 
-/* SymbolTable¿¡ ´ëÇÑ ¸Ş¼­µå */
+/* SymbolTableì— ëŒ€í•œ ë©”ì„œë“œ */
 
 SymbolTable::SymbolTable() {
 	numOfSymbols = 0;
@@ -27,11 +27,11 @@ bool SymbolTable::findName(string name) {
 	return false;
 }
 ostream& operator<<(ostream& os, const Information& info) {
-	os << "( name = " << info.name << ", " << info.type << ", " << info.ID << ")";
+	os << "( name = " << info.name << " | " << info.type << " | " << info.ID << ")";
 	return os;
 }
 
-/* Information¿¡ ´ëÇÑ ¸Ş¼­µå */
+/* Informationì— ëŒ€í•œ ë©”ì„œë“œ */
 
 
 Information::Information(string _name, string _type, string _ID, string _nontmn)
@@ -54,6 +54,9 @@ int Information::getSize() {
 }
 string Information::getNonterminal() {
 	return nonterminal;
+}
+void Information::addType(string _type) {
+	type += _type;
 }
 
 ostream& operator<< (ostream& os, const SymbolTable& s) {
