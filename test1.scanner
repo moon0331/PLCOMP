@@ -1,4 +1,4 @@
-printf(word, b) {
-    word word < b;
+word word ( word , word ) {
+    word word > word ;
 }
 

@@ -20,7 +20,7 @@ int main(int argc, const char *argv[]) {
 	cout << filename;*/
 
 	const string compilerName = "compiler2014 ";
-	string filename = "test";
+	string filename = "test1";
 	//    cout<<"FILE NAME: ";
 	//    cin >> filename;
 	//    if (compilerName+filename != "compiler2014 test") { //일단 test만 가능하도록 처리함!

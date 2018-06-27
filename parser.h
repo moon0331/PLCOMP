@@ -37,7 +37,7 @@ private:
     Node* parseTreeRoot;
     
 	string str;			// string
-	stack<Tuple> sstack;
+	vector<Tuple> sstack;
 	State* state;		// present state
 public:
 	Parser(); //input tape

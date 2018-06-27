@@ -1,0 +1,5 @@
+( name = printf, function name, NAME)
+( name = asdf, INT, NAME)
+( name = cc, CHAR, NAME)
+( name = a, function parameter, NAME)
+( name = b, function parameter, NAME)

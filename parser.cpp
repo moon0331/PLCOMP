@@ -207,7 +207,7 @@ Parser::Parser() {
     }
     
 	cout << "parser INITIALIZATION" << endl;
-	sstack.push({ 0,"$" });
+    sstack.push_back(Tuple{0, "$"});
     
     /*
 	ifstream file("Transition_table-v2.csv");
@@ -217,7 +217,7 @@ Parser::Parser() {
 	for (int i = 0; i < NUM_OF_STATES; i++) {
 		string line;
 		getline(file, line);
-		vector<string> str = tok(line);
+        vector<string> str = tok(line);
 		int idx = 0;
 		while (idx < ActionToken.size()) {
 			cout << endl;
@@ -246,64 +246,47 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& input
     // SHIFT_REDUCE PARSING
     while(it!=end(inputTape)){
         string handle = *it;
+        current_state = sstack[sstack.size()-1].stateNum;
+        
         int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
-        cout<<handle<<endl;
 		if (nextDestination >= 0){
 			shift(nextDestination, handle);
+            cout<<handle<<endl;
 			it = next(it, 1);
 		}
 		else {
 			reduce(nextDestination);
 		}
     }
-
-//    while (!scanFile.eof()) {
-//        string line;
-//        getline(scanFile, line);
-//        str += line;
-//    }
-//    str += "$";
-//    cout << str << endl;
-//
-//    while (true) {
-//        Tuple tuple = sstack.top();
-//        int stateNo = tuple.stateNum;
-//        string s_r = tuple.str;
-//        break;
-//    }
+    if(it==end(inputTape) || (int)sstack.size()==0){
+        cout<<"ACCEPTED"<<endl;
+    }
 }
 
 void Parser::shift(int nextDestination, string handle) {
-	/*string s = "";
-	int i = 0;
-	while (str[0] != ' ') {
-	str = str.substr(1);
-	}
-	for (i = 0; str[i] != ' '; i++) {
-	s += str[i];
-	}
-	str = str.substr(i+1);
-	sstack.push({});*/
-
-	sstack.push({ nextDestination, handle });
+    sstack.push_back({ nextDestination, handle });
 }
 
 void Parser::reduce(int nextDestination) {
 	int current_state = abs(nextDestination);
 	string lhs = grammars[current_state].left_side;
 	vector<string> rhs = grammars[current_state].right_side;
-	int size = rhs.size();
+	int size = (int)rhs.size();
+    
+    // If rhs is empty, it should not be popped.
+    for(int i=0; i<size; i++){
+        if(rhs[i] == "")
+            continue;
+        sstack.pop_back();
+    }
 
-	while (size > 0) {
-		sstack.pop();
-		size--;
-	}
-	sstack.pop();
-	int top_original = sstack.top().stateNum;
+	int top_original = sstack[(int)sstack.size()-1].stateNum;
 	current_state = LR_TABLE[top_original][MAP_LR_TABLE.find(lhs)->second];
-	sstack.push({current_state, grammars[current_state].left_side });
+    sstack.push_back(Tuple{current_state, lhs});
+//    sstack.push_back(Tuple{current_state, grammars[current_state].left_side});
 }
 
 bool Parser::isFinalState() {
 	return true; //일단 나중에 수정해야
 }
+
