@@ -52,7 +52,6 @@ bool isMultiToken(string token, vector<string>& real_tokens) {
 	int size = terminals.size();
 	for (int i = 0; i < size; i++) {
 		const string& s = terminals[i];
-		cout << s << " check " << endl;
 		if (token.find(s) != string::npos && token.size()!=s.size()) {
 			cout << "not a single token as " << s << " exists in " << token << endl;
 			return true;
@@ -72,7 +71,14 @@ void addRealToken(string token, vector<string>& real_tokens) {
 				idx++;
 			}
 			cout << "seperated " << tok << endl;
-			real_tokens.push_back(tok);
+			if(tok=="INT" || tok=="CHAR")
+				real_tokens.push_back(tok);
+			else if (regex_match(tok, regex("([0-9])*"))) {
+				real_tokens.push_back("num");
+			}
+			else {
+				real_tokens.push_back("word");
+			}
 		}
 		else {
 			tok += token[idx];
@@ -85,11 +91,11 @@ void addRealToken(string token, vector<string>& real_tokens) {
 
 vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	vector<Information>& symTable = symbolTable.table;
-	vector<string> v;
+	vector<string> inputTape;	//return value
 	vector<string> code;
 	string line;
 
-	vector<string> inputTape; //return value
+	//vector<string> inputTape; //return value
 
 	const regex regNum("([0-9])*");
 	const regex regWord("([A-z])*");
@@ -105,7 +111,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		char* tokken = strtok(newLine, " ");
 		bool isOpen = false;
 
-
+		//tokenize
 		while (tokken) {
 			char token[129];
 			strcpy(token, tokken);
@@ -118,23 +124,18 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 			else {
 				real_tokens.push_back(string(token));
 			}
-			inputTape.insert(inputTape.end(), real_tokens.begin(), real_tokens.end());
+			//inputTape.insert(inputTape.end(), real_tokens.begin(), real_tokens.end());
 			for (int i = 0; i < (int)real_tokens.size(); i++) {
 				string myWord = real_tokens[i];
 				if (!strcmp(myWord.c_str(), "(")) isOpen = true;
 				if (!strcmp(myWord.c_str(), ")")) isOpen = false;
-				if (regex_match(myWord, regWord) && find(v.begin(), v.end(), myWord) == v.end() && !isReservedWord(myWord)) {
+				if (regex_match(myWord, regWord) && find(inputTape.begin(), inputTape.end(), myWord) == inputTape.end() && !isReservedWord(myWord)) {
 					string type = "";
 					if (isOpen) {
 						type = "function parameter";
 					}
-
-					/*else if (myWord=="INT" || myWord=="CHAR") {
-					type = myWord;
-					}*/
-
-					else if (v.size() >= 1 && (v[v.size() - 1] == "INT" || v[v.size() - 1] == "CHAR")) {
-						type = v[v.size() - 1];
+					else if (inputTape.size() >= 1 && (inputTape[inputTape.size() - 1] == "INT" || inputTape[inputTape.size() - 1] == "CHAR")) {
+						type = inputTape[inputTape.size() - 1];
 					}
 					else {
 						type = "function name";
@@ -143,7 +144,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 					symTable.push_back(Information(myWord, type, "NAME", "WORD"));
 					cout << "....SYMBOL";
 				}
-				v.push_back(myWord);
+				inputTape.push_back(myWord);
 				cout << endl;
 				tokken = strtok(NULL, " ");
 			}
@@ -179,9 +180,9 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 
 	// change token : number to num
 	cout << "number to NUM........................." << endl;
-	for (int i = 0; i < (int)v.size(); i++) {
+	for (int i = 0; i < (int)inputTape.size(); i++) {
 		for (int c = 0; c < (int)code.size(); c++) {
-			string& num = v[i];
+			string& num = inputTape[i];
 			string& myLine = code[c];
 			if (regex_match(num, regNum)) {
 				auto pos = myLine.find(num, 0);
@@ -195,12 +196,23 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		}
 	}
 
-	for (int i = 0; i < (int)v.size(); i++) {
-		cout << v[i] << ", " << v[i].length() << endl;
+	//symbol to word
+	for (int i = 0; i < (int)symbolTable.table.size(); i++) {
+		string sym = symbolTable.table[i].getname();
+		for (int j = 0; j < (int)inputTape.size(); j++) {
+			string inp = inputTape[j];
+			if (sym == inp) {
+				inputTape[j] = "word";
+			}
+		}
 	}
 
-	for (int i = 0; i < inputTape.size(); i++) {
-		cout << "[" << inputTape[i] << "] ";
+	for (int i = 0; i < (int)inputTape.size(); i++) {
+		cout << inputTape[i] << ", " << inputTape[i].length() << endl;
+	}
+
+	for (int i = 0; i < (int)code.size(); i++) {
+		output << code[i] << endl;
 	}
 
 	return inputTape;
