@@ -89,6 +89,8 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	vector<string> code;
 	string line;
 
+	vector<string> inputTape; //return value
+
 	const regex regNum("([0-9])*");
 	const regex regWord("([A-z])*");
 
@@ -116,6 +118,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 			else {
 				real_tokens.push_back(string(token));
 			}
+			inputTape.insert(inputTape.end(), real_tokens.begin(), real_tokens.end());
 			for (int i = 0; i < (int)real_tokens.size(); i++) {
 				string myWord = real_tokens[i];
 				if (!strcmp(myWord.c_str(), "(")) isOpen = true;
@@ -174,23 +177,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		}
 	}
 
-	cout << "what process??.........................." << endl;
-	for (int i = 0; i < (int)vtype.size(); i++) {
-		string var = vtype[i];
-		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
-			cout << "check : " << var << endl;
-			string& myLine = code[lineNum];
-			auto pos = myLine.find(var, 0);
-			while (pos != string::npos) {
-				cout << "ASDF" << endl;
-				myLine.replace(pos, var.length(), "word");
-				cout << "line " << lineNum << " changed : " << myLine << endl;
-				pos += 4;
-				pos = myLine.find(var, pos);
-			}
-		}
-	}
-
 	// change token : number to num
 	cout << "number to NUM........................." << endl;
 	for (int i = 0; i < (int)v.size(); i++) {
@@ -206,21 +192,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 					pos = myLine.find(num, pos);
 				}
 			}
-		}
-	}
-
-	vector<string> inputTape;
-
-	for (int i = 0; i < code.size(); i++) {
-		cout << code[i] << endl;
-		output << code[i] << endl;	//write data in output
-		char linee[1024];
-		strcpy(linee, code[i].c_str());
-		char* tok = strtok(linee, " ");
-		while (tok) {
-			cout << tok << "토큰 입력" << endl;
-			inputTape.push_back(string(tok));
-			tok = strtok(NULL, " ");
 		}
 	}
 
