@@ -208,42 +208,12 @@ Parser::Parser() {
     
 	cout << "parser INITIALIZATION" << endl;
     sstack.push_back(Tuple{0, "$"});
-    
-    /*
-	ifstream file("Transition_table-v2.csv");
-	for (int i = 0; i < NUM_OF_STATES; i++) {
-		stateArr.push_back(State(i));
-	}
-	for (int i = 0; i < NUM_OF_STATES; i++) {
-		string line;
-		getline(file, line);
-        vector<string> str = tok(line);
-		int idx = 0;
-		while (idx < ActionToken.size()) {
-			cout << endl;
-			cout << idx << "th: [" << ActionToken[idx] << "], [" << str[idx] << "]" << endl;
-			stateArr[i].getActionTable().insert(pair<string, actNum>(ActionToken[idx], str[idx]));
-			idx++;
-		}
-		cout << "\nPut into goto" << endl;
-		while (idx < ActionToken.size() + GotoToken.size()) {
-			int val = idx - (int)ActionToken.size();
-			cout << "idx = " << idx << ", val = " << val << endl;
-			cout << idx << "th : [" << GotoToken[val] << "], [" << str[idx] << "]" << endl;
-			stateArr[i].getGotoTable().insert(pair<string, int>(GotoToken[val], atoi(str[idx].c_str()))); //atoi 수정 필요
-			idx++;
-		}
-		cout << "TURN END" << endl;
-	}
-	cout << "BASIC END" << endl;
-	file.close();
-     */
 }
 
 void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& inputTape) {
     vector<string>::iterator it = inputTape.begin();
     int current_state = 0;
-    // SHIFT_REDUCE PARSING
+    
     while(it!=end(inputTape)){
         string handle = *it;
         current_state = sstack[sstack.size()-1].stateNum;
@@ -256,6 +226,7 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& input
 		}
 		else {
 			reduce(nextDestination);
+            cout<<"REDUCE #: "<<abs(nextDestination)<<endl;
 		}
     }
     if(it==end(inputTape) || (int)sstack.size()==0){
