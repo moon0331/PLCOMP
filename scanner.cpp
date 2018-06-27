@@ -117,23 +117,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		}
 	}
 
-	//change token : reserved word and vtype word to word
-	for (int i = 0; i < (int)reserved.size(); i++) {
-		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
-			string var = reserved[i];
-			cout << "check : " << var << endl;
-			string& myLine = code[lineNum];
-			auto pos = myLine.find(var, 0);
-			while (pos != string::npos) {
-				cout << "ASDF" << endl;
-				myLine.replace(pos, var.length(), "word");
-				cout << "line " << lineNum << " changed : " << myLine << endl;
-				pos += 4;
-				pos = myLine.find(var, pos);
-			}
-		}
-	}
-
 	for (int i = 0; i < (int)vtype.size(); i++) {
 		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
 			string var = vtype[i];
