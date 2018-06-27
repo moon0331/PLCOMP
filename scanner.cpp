@@ -174,23 +174,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		}
 	}
 
-	cout << "what process??.........................." << endl;
-	for (int i = 0; i < (int)vtype.size(); i++) {
-		string var = vtype[i];
-		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
-			cout << "check : " << var << endl;
-			string& myLine = code[lineNum];
-			auto pos = myLine.find(var, 0);
-			while (pos != string::npos) {
-				cout << "ASDF" << endl;
-				myLine.replace(pos, var.length(), "word");
-				cout << "line " << lineNum << " changed : " << myLine << endl;
-				pos += 4;
-				pos = myLine.find(var, pos);
-			}
-		}
-	}
-
 	// change token : number to num
 	cout << "number to NUM........................." << endl;
 	for (int i = 0; i < (int)v.size(); i++) {
