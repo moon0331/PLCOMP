@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <vector>
 #include <cstring>
+#include <cctype>
 
 #include "scanner.h"
 #include "symboltable.h"
@@ -14,6 +15,13 @@ using namespace std;
 
 const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };	//예약어 전역 설정
 const vector<string> vtype = { "INT", "CHAR" };									//예약어 전역 설정
+const vector<string> terminals = { "(",		")",	";",	",",	"{",	"}",	"=",	">",	"<",	"+",	"*"};
+
+//    "(",        ")",        ";",
+//    ",",        "{",        "}",
+//    "=",
+//    ">",        "<",        "+",        "*",
+//    "num",        "$"
 
 extern SymbolTable symbolTable; //using extern to use symbolTable which is located in main.cpp
 
@@ -39,6 +47,42 @@ bool isReservedWord(string token) { //is reserved word?
 	else return false;
 }
 
+bool isMultiToken(string token, vector<string>& real_tokens) {
+	cout << "isMultiToken?" << endl;
+	int size = terminals.size();
+	for (int i = 0; i < size; i++) {
+		const string& s = terminals[i];
+		cout << s << " check " << endl;
+		if (token.find(s) != string::npos && token.size()!=s.size()) {
+			cout << "not a single token as " << s << " exists in " << token << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+void addRealToken(string token, vector<string>& real_tokens) {
+	int size = token.size();
+	int idx = 0;
+	while (idx < size) {
+		string tok;
+		if (isalnum(token[idx])) {
+			while (isalnum(token[idx])) {
+				tok += token[idx];
+				idx++;
+			}
+			cout << "seperated " << tok << endl;
+			real_tokens.push_back(tok);
+		}
+		else {
+			tok += token[idx];
+			cout << "seperated (one character) " << tok << endl;
+			real_tokens.push_back(tok);
+			idx++;
+		}
+	}
+}
+
 vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	vector<Information>& symTable = symbolTable.table;
 	vector<string> v;
@@ -56,37 +100,50 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		cout << "[" << i << "]" << line << " || NUM of Characters : " << line.length() << endl;
 		char newLine[1024]; //temp
 		strcpy(newLine, line.c_str());
-		char* token = strtok(newLine, " ");
+		char* tokken = strtok(newLine, " ");
 		bool isOpen = false;
 
-		while (token) {
-			cout << token << " found";
-			string myWord(token);
-			if (!strcmp(token, "(")) isOpen = true;
-			if (!strcmp(token, ")")) isOpen = false;
-			if (regex_match(myWord, regWord) && find(v.begin(), v.end(), myWord) == v.end() && !isReservedWord(myWord)) {
-				string type = "";
-				if (isOpen) {
-					type = "function parameter";
-				}
 
-				/*else if (myWord=="INT" || myWord=="CHAR") {
-				type = myWord;
-				}*/
-
-				else if (v.size() >= 1 && (v[v.size() - 1] == "INT" || v[v.size() - 1] == "CHAR")) {
-					type = v[v.size() - 1];
-				}
-				else {
-					type = "function name";
-				}
-
-				symTable.push_back(Information(myWord, type, "NAME", "WORD"));
-				cout << "....SYMBOL";
+		while (tokken) {
+			char token[129];
+			strcpy(token, tokken);
+			cout << "[" << token << "] found......";
+			vector<string> real_tokens;
+			if (isMultiToken(string(token), real_tokens)) {
+				cout << "not match : not alphabet or not.... need to seperate" << endl;
+				addRealToken(string(token), real_tokens);
 			}
-			v.push_back(myWord);
-			cout << endl;
-			token = strtok(NULL, " ");
+			else {
+				real_tokens.push_back(string(token));
+			}
+			for (int i = 0; i < (int)real_tokens.size(); i++) {
+				string myWord = real_tokens[i];
+				if (!strcmp(myWord.c_str(), "(")) isOpen = true;
+				if (!strcmp(myWord.c_str(), ")")) isOpen = false;
+				if (regex_match(myWord, regWord) && find(v.begin(), v.end(), myWord) == v.end() && !isReservedWord(myWord)) {
+					string type = "";
+					if (isOpen) {
+						type = "function parameter";
+					}
+
+					/*else if (myWord=="INT" || myWord=="CHAR") {
+					type = myWord;
+					}*/
+
+					else if (v.size() >= 1 && (v[v.size() - 1] == "INT" || v[v.size() - 1] == "CHAR")) {
+						type = v[v.size() - 1];
+					}
+					else {
+						type = "function name";
+					}
+
+					symTable.push_back(Information(myWord, type, "NAME", "WORD"));
+					cout << "....SYMBOL";
+				}
+				v.push_back(myWord);
+				cout << endl;
+				tokken = strtok(NULL, " ");
+			}
 		}
 	}
 
@@ -104,8 +161,8 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 
 	// change token : symbol to word
 	for (int i = 0; i < (int)symTable.size(); i++) {
+		string var = symTable[i].getname();
 		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
-			string var = symTable[i].getname();
 			string& myLine = code[lineNum];
 			auto pos = myLine.find(var, 0);
 			while (pos != string::npos) {
@@ -117,10 +174,11 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		}
 	}
 
+	cout << "what process??.........................." << endl;
 	for (int i = 0; i < (int)vtype.size(); i++) {
+		string var = vtype[i];
 		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
-			string var = vtype[i];
-			cout << "체크 : " << var << endl;
+			cout << "check : " << var << endl;
 			string& myLine = code[lineNum];
 			auto pos = myLine.find(var, 0);
 			while (pos != string::npos) {
@@ -134,6 +192,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	}
 
 	// change token : number to num
+	cout << "number to NUM........................." << endl;
 	for (int i = 0; i < (int)v.size(); i++) {
 		for (int c = 0; c < (int)code.size(); c++) {
 			string& num = v[i];
