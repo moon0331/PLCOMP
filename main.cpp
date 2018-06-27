@@ -95,7 +95,7 @@ int main(int argc, const char *argv[]) {
 	scanner_file_fin.close();
 
     Parser parser;        //parser 객체
-    parser.parse(scanner_file_to_parse, code_fin, inputTape);
+    parser.parse(inputTape);
 
 	inputFile_fin.close();
 	scanner_file_to_parse.close();

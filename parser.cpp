@@ -9,66 +9,12 @@
 #define NUM_OF_COL    38
 #define NUM_OF_STATES 177
 
-// LENGTH of LR_TABLE: 38
-//enum ENUM_LR_TABLE {
-//    STATE, OPEN_P, CLOSE_P, TYPE, SEMI, COMMA, INT, CHAR, OPEN_B, CLOSE_B, IF,
-//    THEN, ELSE, WHILE, EQUAL, RETURN, BIGGER, SMALLER, PLUS, MULTIPLY, N, W, DOLLAR,
-//    P, DS, D, WS, V, B, SL, S, C, E, T, F, ACC
-//};
-
-//map<string, int> MAP_LR_TABLE;
-
 string enum_to_str[] = {
     "STATE", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF", "THEN",
     "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "word", "$",
     "prog", "decls", "decl", "words", "vtype", "block", "slist", "stat", "cond",
     "expr", "term", "fact", "n", "w", "acc"
 };
-
-//int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
-
-
-//const vector<string> ActionToken = {
-//    "word",        "(",        ")",        "type",        ";",
-//    ",",        "INT",        "CHAR",        "{",        "}",
-//    "IF",        "THEN",        "ELSE",        "WHILE",    "=",
-//    "RETURN",    ">",        "<",        "+",        "*",
-//    "num",        "$"
-//};
-//
-//const vector<string> GotoToken = {
-//    "prog",        "decls",    "decl",        "words",    "vtype",
-//    "block",    "slist",    "stat",        "cond",        "expr",
-//    "term",        "fact"
-//};
-
-//extern vector<State> stateArr;
-
-//vector<string> tok(string line) {
-//    vector<string> v;
-//    int len = (int)line.length();
-//    string s = "";
-//    int count = 0;
-//    for (int i = 0; i <= len; i++) {
-//        if (line[i] == ',' || line[i]=='\0') {
-//            v.push_back(s);
-//            s = "";
-//            count++;
-//        }
-//        else {
-//            s += line[i];
-//        }
-//    }
-//    cout << count<<"th"<<endl;
-//    v.erase(v.begin());
-//    int size = (int)v.size(); //34
-//    int newSize = (int)ActionToken.size() + (int)GotoToken.size(); //34
-//    cout << size << newSize << endl;
-//    for (int i = 0; i < size; i++) {
-//        cout << "[" << i << "] " << v[i] << " | ";
-//    }
-//    return v;
-//}
 
 void Parser::create_LR_TABLE(){
     cout<<"READING TABLE FROM CSV"<<endl;
@@ -207,21 +153,21 @@ Parser::Parser() {
     }
     
 	cout << "parser INITIALIZATION" << endl;
-    sstack.push_back(Tuple{0, "$"});
+    sstack.push_back(new Tuple{0, "$", vector<Tuple*>{}});
 }
 
-void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& inputTape) {
+void Parser::parse(vector<string>& inputTape) {
     vector<string>::iterator it = inputTape.begin();
     int current_state = 0;
     
     while(it!=end(inputTape)){
         string handle = *it;
-        current_state = sstack[sstack.size()-1].stateNum;
+        current_state = sstack.back()->stateNum;
         
         int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
 		if (nextDestination >= 0){
 			shift(nextDestination, handle);
-            cout<<handle<<endl;
+            cout<<"HANDLE: "<<handle<<endl;
 			it = next(it, 1);
 		}
 		else {
@@ -230,12 +176,13 @@ void Parser::parse(ifstream& scanFile, ofstream& codeFile, vector<string>& input
 		}
     }
     if(it==end(inputTape) || (int)sstack.size()==0){
+        // CHECK THE PARSE TREE HERE
         cout<<"ACCEPTED"<<endl;
     }
 }
 
 void Parser::shift(int nextDestination, string handle) {
-    sstack.push_back({ nextDestination, handle });
+    sstack.push_back(new Tuple{ nextDestination, handle, vector<Tuple*>{}});
 }
 
 void Parser::reduce(int nextDestination) {
@@ -244,20 +191,34 @@ void Parser::reduce(int nextDestination) {
 	vector<string> rhs = grammars[current_state].right_side;
 	int size = (int)rhs.size();
     
+    Tuple *newTuple = new Tuple{};
+    
     // If rhs is empty, it should not be popped.
     for(int i=0; i<size; i++){
-        if(rhs[i] == "")
+        if(rhs[i] == ""){
+            // Connect empty tuple
+            Tuple *empty_tuple = new Tuple{current_state, "", vector<Tuple*>{}};
+            newTuple->children.insert(begin(newTuple->children), empty_tuple);
             continue;
+        }
+        Tuple *t = sstack[(int)sstack.size()-1];
+        
         sstack.pop_back();
+        // insert at front
+        newTuple->children.insert(begin(newTuple->children), t);
+//        cout<<"INSERTED: state #"<<t->stateNum<<endl;
     }
 
-	int top_original = sstack[(int)sstack.size()-1].stateNum;
+	int top_original = sstack.back()->stateNum;
 	current_state = LR_TABLE[top_original][MAP_LR_TABLE.find(lhs)->second];
-    sstack.push_back(Tuple{current_state, lhs});
-//    sstack.push_back(Tuple{current_state, grammars[current_state].left_side});
+    newTuple->stateNum = current_state;
+    newTuple->str = lhs;
+    sstack.push_back(newTuple);
+    cout<<"New Tuple Inserted: state #"<<newTuple->stateNum<<endl;
+    cout<<"New Tuple Inserted: lhs: "<<newTuple->str<<endl<<endl;
 }
 
 bool Parser::isFinalState() {
-	return true; //일단 나중에 수정해야
+	return true;
 }
 

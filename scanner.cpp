@@ -49,7 +49,7 @@ bool isReservedWord(string token) { //is reserved word?
 
 bool isMultiToken(string token, vector<string>& real_tokens) {
 	cout << "isMultiToken?" << endl;
-	int size = terminals.size();
+	int size = (int)terminals.size();
 	for (int i = 0; i < size; i++) {
 		const string& s = terminals[i];
 		cout << s << " check " << endl;
@@ -62,7 +62,7 @@ bool isMultiToken(string token, vector<string>& real_tokens) {
 }
 
 void addRealToken(string token, vector<string>& real_tokens) {
-	int size = token.size();
+	int size = (int)token.size();
 	int idx = 0;
 	while (idx < size) {
 		string tok;
