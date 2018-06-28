@@ -314,6 +314,9 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	}
 
 	for (int i = 0; i < (int)inputTape.size(); i++) {
+		if (regex_match(inputTape[i], regNum)) {
+			inputTape[i] = "num";
+		}
 		cout << inputTape[i] << ", " << inputTape[i].length() << endl;
 	}
 
