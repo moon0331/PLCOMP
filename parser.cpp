@@ -178,11 +178,16 @@ void Parser::parse(vector<string>& inputTape) {
     if(it==end(inputTape) || (int)sstack.size()==0){
         // CHECK THE PARSE TREE HERE
         cout<<"ACCEPTED"<<endl;
+        
+        for(auto it=begin(sstack); it!=end(sstack); it++){
+            cout<<"STACK: "<<(*it)->str<<endl;
+        }
     }
 }
 
 void Parser::shift(int nextDestination, string handle) {
-    sstack.push_back(new Tuple{ nextDestination, handle, vector<Tuple*>{}});
+    Tuple * temp = new Tuple{nextDestination, handle, vector<Tuple*>{}};
+    sstack.push_back(temp);
 }
 
 void Parser::reduce(int nextDestination) {
