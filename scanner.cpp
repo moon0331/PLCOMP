@@ -39,7 +39,8 @@ bool num_len(const string& a, const string& b) { //sorting string
 	else return false;
 }
 
-bool var_len(const Information& a, const Information& b) { //sorting (1. length of symbol name, 2. alphabetical order)
+//sorting (1. length of symbol name, 2. alphabetical order)
+bool var_len(const Information& a, const Information& b) {
 	int a_len = (int)a.getname().length(), b_len = (int)b.getname().length();
 	if (a_len > b_len) {
 		return true;
@@ -119,14 +120,15 @@ void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& co
 	while (true) {
 		string line;
 		getline(input, line);
+        if(line=="")
+            continue;
         
         if(line.find("END")==0){
-            break;
+            return;
         }
         
 		code.push_back(line);
-//        cout << "[" << i << "]" << line << " || NUM of Characters : " << line.length() << endl;
-		if (line.length() == 0) return;
+        
 		char newLine[1024]; //temp
 		strcpy(newLine, line.c_str());
 		char* tokken = strtok(newLine, " ");
@@ -135,10 +137,8 @@ void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& co
 		while (tokken) {
 			char token[129];
 			strcpy(token, tokken);
-//            cout << "[" << token << "] found......";
 			vector<string> real_tokens;
 			if (isMultiToken(string(token), real_tokens)) {
-//                cout << "not match : not alphabet or not.... need to seperate" << endl;
 				addRealToken(string(token), real_tokens);
 			}
 			else {
@@ -146,7 +146,6 @@ void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& co
 			}
 			for (int i = 0; i < (int)real_tokens.size(); i++) {
 				string myWord = real_tokens[i];
-//                cout <<"CHECKED: " <<myWord<<endl;
 				if (!strcmp(myWord.c_str(), "(")) isOpen = true;
 				if (!strcmp(myWord.c_str(), ")")) isOpen = false;
 				if (regex_match(myWord, regWord) && find(inputTape.begin(), inputTape.end(), myWord) == inputTape.end() && !isReservedWord(myWord)) {
@@ -172,16 +171,8 @@ void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& co
 //                    cout << endl << myWord << "--------------------------------------------push" << endl;
 					symbolTable.push(Information(symbolTable.getNum(), myWord, type, "NAME", "WORD"));
 					startOfSymbolTable++;
-//                    cout << "....SYMBOL";
 				}
-//                cout << endl;
 				inputTape.push_back(myWord);
-//                cout << "[push " << myWord << "]" << endl;
-				if (string(myWord) == "}") {
-//                    cout << myWord << "appeared -> function end -> break" << endl;
-//                    cout << input.eof() << "eof????" << endl;
-					return;
-				} 
 				tokken = strtok(NULL, " ");
 			}
 		}
@@ -195,21 +186,10 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	vector<string> code;
 	string line;
 
-	//vector<string> inputTape; //return value
-
 	const regex regNum("([0-9])*");
 	const regex regWord("([A-z])*"); //가져가야
 
-//    cout << line << endl;
-
-	//bool isEndOfFunction = true;
-
     functionScan(input, inputTape, code, 1, regWord);
-//    for (int i = 1; !input.eof(); i++) {
-//        
-////        cout << "goto another function" << endl;
-////        cout << input.eof() << "eof?" << endl;
-//    }
 
 	// change symbols into word
 	sort(symTable.begin(), symTable.end(), var_len);
@@ -221,8 +201,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		cout << "[" << symTable[i].getname() << "]" << endl;
 	}
 
-//    cout << "============================" << endl;
-
 	// change token : symbol to word
 	for (int i = 0; i < (int)symTable.size(); i++) {
 		string var = symTable[i].getname();
@@ -232,18 +210,15 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 			while (pos != string::npos) {
 				if (var.length() >= 5) {
 					myLine.replace(pos, var.length(), "word");
-					//                cout << "line " << lineNum << " changed : " << myLine << endl;
 					pos += 4;
 				}
 				else { //if length is 1
-					//cout << "now line is " << i << ", and its content is \n" << myLine << ", find(" << var << ")" << endl;
 					bool changeable = false;
 
 					const string WORD("word"), NUM("num");
 
 					int wordIdx = WORD.find(var, 0);
 					int numIdx = NUM.find(var, 0);
-
 
 					if (wordIdx == string::npos && numIdx == string::npos) changeable = true;
 					else if (wordIdx != string::npos) {
@@ -252,7 +227,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 							//cout << WORD[x] << " AND " << myLine[y] << endl;
 							if (WORD[x] != myLine[y]) {
 								changeable = true;
-								break;
+//                                break;
 							}
 						}
 					}
@@ -261,7 +236,7 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 							int y = pos - wordIdx + x;
 							if (NUM[x] != myLine[y]) {
 								changeable = true;
-								break;
+//                                break;
 							}
 						}
 					}
@@ -284,7 +259,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 	}
 
 	// change token : number to num
-//    cout << "number to NUM........................." << endl;
 	vector<string> numValue;
 	for (int i = 0; i < (int)inputTape.size(); i++) {
 		if (regex_match(inputTape[i], regNum)) {
@@ -325,7 +299,6 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		if (regex_match(inputTape[i], regNum)) {
 			inputTape[i] = "num";
 		}
-//        cout << inputTape[i] << ", " << inputTape[i].length() << endl;
 	}
 
 	for (int i = 0; i < (int)code.size(); i++) {

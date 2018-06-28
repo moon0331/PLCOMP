@@ -15,17 +15,14 @@ void SymbolTable::push(Information info) {
 	numOfSymbols++;
 }
 bool SymbolTable::findName(string name) {
-//    cout << "finding " << name << "..... numOfSymbols is " << numOfSymbols << endl;
 	for (int i = 0; i < numOfSymbols; i++) {
-//        cout << table[i].getname() << " == " << name << endl;
 		if (table[i].getname() == name) {
-//            cout << "exist!";
 			return true;
 		}
 	}
-//    cout << "not exist!";
 	return false;
 }
+
 Information* SymbolTable::getInfo(string name) {
 	for (int i = 0; i < numOfSymbols; i++) {
 		if (table[i].getname()==name) {
@@ -34,6 +31,7 @@ Information* SymbolTable::getInfo(string name) {
 	}
     return NULL;
 }
+
 ostream& operator<<(ostream& os, const Information& info) {
 	os << "( " << "[" << info.idx << "] " << "name = " << info.name << " | " << info.type << " | " << info.ID << ")";
 	return os;
