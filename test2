@@ -1,10 +1,4 @@
-INT testWhile ( left , right , num ) {
-    WHILE left > right {
-        IF num > right THEN {
-            RETURN num > right ;
-        }
-        ELSE {
-            RETURN right > num ;
-        }
-    }
+INT test2 ( left , right ) {
+    INT mid ;
+    RETURN left > right ;
 }
