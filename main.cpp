@@ -49,30 +49,30 @@ int main(int argc, const char *argv[]) {
 	vector<string> inputTape=scanner.scan(inputFile_fin, scanner_file);
 	scanner_file.close();
 
-	cout << "-=--symbol is-------------------" << endl;
+	cout << "\n<SYMBOL>" << endl;
 	vector<Information>& vv = symbolTable.table;
 
 	for (int i = 0; i < vv.size(); i++)
 		cout << vv[i] << endl;
-	cout << "-=------------------------------" << endl;
-
-	cout << "---------------input tape is----------------" << endl;
-	for (int i = 0; i < inputTape.size(); i++) {
-		cout << "[" << inputTape[i] << "]" << endl;
-	}
-	cout << "----------------------------------------------" << endl;
+//    cout << "-=------------------------------" << endl;
+//
+//    cout << "---------------input tape is----------------" << endl;
+//    for (int i = 0; i < inputTape.size(); i++) {
+//        cout << "[" << inputTape[i] << "]" << endl;
+//    }
+//    cout << "----------------------------------------------" << endl;
 
 
 	ifstream scanner_file_fin(filename + ".scanner");	//ifstream for print result of scanner
 	ifstream scanner_file_to_parse(filename + ".scanner"); //ifstream for parsing
 	ofstream code_fin(filename + ".code");		//result .code
 
-	cout << "Converted Code is" << endl;
-	string line;
-	while (!scanner_file_fin.eof()) {
-		getline(scanner_file_fin, line);
-		cout << line << endl;
-	}
+//    cout << "Converted Code is" << endl;
+//    string line;
+//    while (!scanner_file_fin.eof()) {
+//        getline(scanner_file_fin, line);
+//        cout << line << endl;
+//    }
 	
 	
 	ofstream sym(filename + ".symbol");  //symbol table file

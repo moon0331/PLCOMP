@@ -17,7 +17,7 @@ string enum_to_str[] = {
 };
 
 void Parser::create_LR_TABLE(){
-    cout<<"READING TABLE FROM CSV"<<endl;
+    cout<<"\nREADING TABLE FROM CSV"<<endl<<endl;
     for(int i=0; i<NUM_OF_STATES; i++){
         for(int j=0; j<NUM_OF_COL; j++){
             LR_TABLE[i][j] = 0;
@@ -153,7 +153,7 @@ Parser::Parser() {
         MAP_LR_TABLE[enum_to_str[i]] =  i;
     }
     
-	cout << "parser INITIALIZATION" << endl;
+	cout << "PARSER INITIALIZATION" << endl;
     sstack.push_back(new Tuple{0, "$", vector<Tuple*>{}});
 }
 
@@ -162,20 +162,22 @@ void Parser::parse(vector<string>& inputTape) {
     int current_state = 0;
     
     while(sstack.size()!=0){
-        string handle = *it;
+        string handle;
         if(it == end(inputTape)){
             handle = "$";
+        }else{
+            handle = *it;
         }
         current_state = sstack.back()->stateNum;
         
         int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
 		if (nextDestination >= 0){
             if(nextDestination == 777){
-                cout<<"ACCEPTED"<<endl;
+                cout<<"\nACCEPTED"<<endl;
                 
-                for(auto it=begin(sstack); it!=end(sstack); it++){
-                    cout<<"STACK: "<<(*it)->str<<endl;
-                }
+//                for(auto it=begin(sstack); it!=end(sstack); it++){
+//                    cout<<"STACK: "<<(*it)->str<<endl;
+//                }
                 break;
             }
 			shift(nextDestination, handle);
