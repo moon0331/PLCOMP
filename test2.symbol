@@ -1,4 +1,0 @@
-( [0] name = testWhile | INT, function name | NAME)
-( [2] name = right | function parameter | NAME)
-( [1] name = left | function parameter | NAME)
-( [3] name = num | function parameter | NAME)

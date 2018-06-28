@@ -1,5 +1,0 @@
-( [0] name = word | , function name | NAME)
-( [1] name = a | function parameter | NAME)
-( [2] name = b | function parameter | NAME)
-( [3] name = c | CHAR | NAME)
-( [4] name = d | INT | NAME)
