@@ -52,7 +52,7 @@ int main(int argc, const char *argv[]) {
 	cout << "\n<SYMBOL>" << endl;
 	vector<Information>& vv = symbolTable.table;
 
-	for (int i = 0; i < vv.size(); i++)
+	for (int i = 0; i < (int)vv.size(); i++)
 		cout << vv[i] << endl;
 //    cout << "-=------------------------------" << endl;
 //
@@ -77,7 +77,7 @@ int main(int argc, const char *argv[]) {
 	
 	ofstream sym(filename + ".symbol");  //symbol table file
 
-	for (int i = 0; i < symbolTable.table.size(); i++) {
+	for (int i = 0; i < (int)symbolTable.table.size(); i++) {
 		sym << symbolTable.table[i] << endl;
 	}
 
