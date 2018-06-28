@@ -28,7 +28,6 @@ private:
     
 	string str;			// string
 	vector<Tuple*> sstack;
-	State* state;		// present state
 public:
 	Parser(); //input tape
 	void parse(vector<string>& inputTape);

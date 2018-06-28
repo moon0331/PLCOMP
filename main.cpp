@@ -1,4 +1,4 @@
-//#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <regex>
@@ -6,16 +6,16 @@
 #include "parser.h"
 #include "scanner.h"
 #include "symboltable.h"
-
 using namespace std;
 
-SymbolTable symbolTable; //global variable. (to use this variable in other cpp file, extern SymbolTable symbolTable; 
+SymbolTable symbolTable;
 
 int main(int argc, const char *argv[]) {
-	const string compilerName = "compiler2018 ";
-    string filename;
+    
+    string compilerName;
     cout<<"FILE NAME: ";
-    cin>>filename;
+    getline(cin, compilerName);
+    string filename = compilerName.substr(13);
     
 	ifstream inputFile_fin;
 	inputFile_fin.open(filename);
