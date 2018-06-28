@@ -13,8 +13,8 @@
 
 using namespace std;
 
-const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };	//예약어 전역 설정
-const vector<string> vtype = { "INT", "CHAR" };									//예약어 전역 설정
+const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };
+const vector<string> vtype = { "INT", "CHAR" };
 const vector<string> terminals = { "(",		")",	";",	",",	"{",	"}",	"=",	">",	"<",	"+",	"*"};
 
 //    "(",        ")",        ";",

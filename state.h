@@ -5,7 +5,7 @@
 using namespace std;
 
 
-typedef string actNum; //첫글자는 shift인지 reduce인지, 두번째부터는 state번호 혹은 변환 번호
+typedef string actNum;
 
 class State {
 private:

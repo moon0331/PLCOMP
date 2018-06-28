@@ -1,6 +1,11 @@
-word ( word , word ) {
-    word word = num ;
-    word word = num ;
-    word word ;
+worword ( worword , worword ) {
+    IF worword > worword
+    THEN {
+        CHAR worword ;
+        RETURN worword > worword ; 
+    }
+    ELSE {
+        INT word ;
+        RETURN word > worword;
+    }
 }
-

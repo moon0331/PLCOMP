@@ -12,35 +12,18 @@ using namespace std;
 SymbolTable symbolTable; //global variable. (to use this variable in other cpp file, extern SymbolTable symbolTable; 
 
 int main(int argc, const char *argv[]) {
-	/*string filename;
-	cin >> filename; //파일이름 입력
-	ofstream source;
-	source.open(filename); //입력할 파일 생성
-	source << filename; //쓰기
-	cout << filename;*/
-
-	const string compilerName = "compiler2014 ";
-	string filename = "test1";
-	//    cout<<"FILE NAME: ";
-	//    cin >> filename;
-	//    if (compilerName+filename != "compiler2014 test") { //일단 test만 가능하도록 처리함!
-	//        cout << "ERROR: wrong file name" << endl;
-	//        return 0;
-	//    }
-	//
-
-	cout << compilerName + filename << ": INPUT FILE NAME" << endl;
+	const string compilerName = "compiler2018 ";
+    string filename;
+    cout<<"FILE NAME: ";
+    cin>>filename;
+    
 	ifstream inputFile_fin;
+	inputFile_fin.open(filename);
 
-	//    inputFile_fin.open(filename);
-
-	inputFile_fin.open(filename);  // XCODE needs the full
-								 // XCODE needs the fullpath. .......................... please modify path!
-
-	ofstream scanner_file; //스캐너 거친 결과 .scanner
+	ofstream scanner_file; // After scanner
 	scanner_file.open(filename + ".scanner");
 
-	ofstream symbol_fin;	//최종 symbol table .symbol
+	ofstream symbol_fin;	// Final symbol table
 	symbol_fin.open(filename + ".symbol");
 
 	if (!inputFile_fin.is_open()) {
@@ -59,10 +42,11 @@ int main(int argc, const char *argv[]) {
 	Scanner scanner;	//scanner 객체
 						/*
 						string line;
-						file_fin >> line; // 파일->콘솔
-						scanner_fout << line << endl; // 콘솔->파일*/
+						file_fin >> line; // file->console
+						scanner_fout << line << endl; // console->file*/
 
-	vector<string> inputTape=scanner.scan(inputFile_fin, scanner_file);	//scanner 작동
+    //scanner starts to scan
+	vector<string> inputTape=scanner.scan(inputFile_fin, scanner_file);
 	scanner_file.close();
 
 	cout << "-=--symbol is-------------------" << endl;
@@ -101,8 +85,11 @@ int main(int argc, const char *argv[]) {
 
 	scanner_file_fin.close();
 
-    Parser parser;        //parser 객체
+    Parser parser;        //parser object
     parser.parse(inputTape);
+    
+    
+    
 
 	inputFile_fin.close();
 	scanner_file_to_parse.close();

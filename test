@@ -1,5 +1,11 @@
-printf ( a , b ) {
-    CHAR cc = 0 ;
-    INT asdf = 1 ;
-    RETURN asdf ;
+word ( a , b ) {
+    IF a > b
+    THEN {
+        CHAR c ;
+        RETURN c > a ; 
+    }
+    ELSE {
+        INT d ;
+        RETURN d > b;
+    }
 }

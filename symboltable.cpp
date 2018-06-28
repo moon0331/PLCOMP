@@ -3,8 +3,7 @@
 
 using namespace std;
 
-/* SymbolTable에 대한 메서드 */
-
+// Methods of SymbolTable
 SymbolTable::SymbolTable() {
 	numOfSymbols = 0;
 }
@@ -31,9 +30,7 @@ ostream& operator<<(ostream& os, const Information& info) {
 	return os;
 }
 
-/* Information에 대한 메서드 */
-
-
+// Method of Information
 Information::Information(string _name, string _type, string _ID, string _nontmn)
 	: name(_name), type(_type), ID(_ID), nonterminal(_nontmn)
 {

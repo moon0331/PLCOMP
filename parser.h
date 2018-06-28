@@ -7,12 +7,7 @@
 
 #define NUM_OF_COL    38
 #define NUM_OF_STATES 184
-
 using namespace std;
-
-//const string transition[] = {
-//    "",
-//};
 
 typedef struct tuple {
 	int stateNum;
@@ -30,7 +25,6 @@ private:
     map<string, int> MAP_LR_TABLE;
     int LR_TABLE[NUM_OF_STATES][NUM_OF_COL];
     vector<Grammar> grammars;
-//    Tuple* parseTreeRoot;
     
 	string str;			// string
 	vector<Tuple*> sstack;
@@ -44,9 +38,4 @@ public:
     
     void create_grammar();
     void create_LR_TABLE();
-	
-    // FOR PARSE TREE //////////////////////////////////////////////////
-//    void create_parseTree();
-    void add_parseTreeNode(string str);  // dynamic allocation is needed.
-    Tuple* get_parseTree();
 };

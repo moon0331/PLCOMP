@@ -24,7 +24,8 @@ void Parser::create_LR_TABLE(){
         }
     }
     
-    ifstream csv_read("Transition_table-v3.csv"); // CHANGE THE PATH HERE
+    ifstream csv_read("Transition_table-v3.csv");
+    // PARSE THE CSV FILE AND MAKE A LR_TABLE
     if(csv_read.is_open()){
         string line;
         while (!csv_read.eof()) {
@@ -62,7 +63,6 @@ void Parser::create_LR_TABLE(){
                         action_num = -stoi(line.substr(i+1, j-i+1));
                     }
                     LR_TABLE[state_num][pos] = action_num;
-//                    cout<<"STATE: "<<state_num<<" / ACTION: "<<enum_to_str[pos]<<" / ACTION_NUM: "<<action_num<<endl;
                     i = j+1;
                 }
                 else if(line[i]==','){
@@ -86,7 +86,6 @@ void Parser::create_LR_TABLE(){
                         break;
                     }
                     LR_TABLE[state_num][pos] = goto_num;
-//                    cout<<"STATE: "<<state_num<<" / GOTO: "<<enum_to_str[pos]<<" / GOTO_NUM: "<<goto_num<<endl;
                     i=j+1;
                 }
             }
@@ -150,6 +149,7 @@ Parser::Parser() {
     create_grammar();
     
     for(int i=0; i<NUM_OF_COL; i++){
+        // COLUMN NUMBER THAT CORRESPONDS TO STRING
         MAP_LR_TABLE[enum_to_str[i]] =  i;
     }
     
@@ -161,7 +161,6 @@ void Parser::parse(vector<string>& inputTape) {
     vector<string>::iterator it = inputTape.begin();
     int current_state = 0;
     
-//    while(it!=end(inputTape)){
     while(sstack.size()!=0){
         string handle = *it;
         if(it == end(inputTape)){
@@ -197,35 +196,32 @@ void Parser::shift(int nextDestination, string handle) {
 
 void Parser::reduce(int nextDestination) {
 	int current_state = abs(nextDestination);
-	string lhs = grammars[current_state].left_side;
-	vector<string> rhs = grammars[current_state].right_side;
+	string lhs = grammars[current_state].left_side;  // LEFT GRAMMAR
+	vector<string> rhs = grammars[current_state].right_side;  // RIGHT GRAMMAR
 	int size = (int)rhs.size();
     
-    Tuple *newTuple = new Tuple{};
+    Tuple *newTuple = new Tuple{};  // TUPLE TO BE ADDED
     
     // If rhs is empty, it should not be popped.
     for(int i=0; i<size; i++){
         if(rhs[i] == ""){
-            // Connect empty tuple
+            // Empty tuple is inserted
             Tuple *empty_tuple = new Tuple{current_state, "", vector<Tuple*>{}};
             newTuple->children.insert(begin(newTuple->children), empty_tuple);
             continue;
         }
-        Tuple *t = sstack[(int)sstack.size()-1];
-        
+        Tuple *t = sstack[(int)sstack.size()-1];  // the last element to be popped
         sstack.pop_back();
-        // insert at front
+        
+        // Insert at front
         newTuple->children.insert(begin(newTuple->children), t);
-//        cout<<"INSERTED: state #"<<t->stateNum<<endl;
     }
 
 	int top_original = sstack.back()->stateNum;
-	current_state = LR_TABLE[top_original][MAP_LR_TABLE.find(lhs)->second];
+	current_state = LR_TABLE[top_original][MAP_LR_TABLE.find(lhs)->second];  // next state to go
     newTuple->stateNum = current_state;
     newTuple->str = lhs;
     sstack.push_back(newTuple);
-//    cout<<"New Tuple Inserted: state #"<<newTuple->stateNum<<endl;
-//    cout<<"New Tuple Inserted: lhs: "<<newTuple->str<<endl<<endl;
 }
 
 bool Parser::isFinalState() {
