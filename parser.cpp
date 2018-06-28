@@ -17,7 +17,7 @@ string enum_to_str[] = {
 };
 
 void Parser::create_LR_TABLE(){
-    cout<<"\nREADING TABLE FROM CSV"<<endl<<endl;
+    cout<<"READING TABLE FROM CSV"<<endl<<endl;
     for(int i=0; i<NUM_OF_STATES; i++){
         for(int j=0; j<NUM_OF_COL; j++){
             LR_TABLE[i][j] = 0;

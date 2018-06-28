@@ -1,4 +1,11 @@
-word ( word , word ) {
-    RETURN word > word ;
+INT word ( word , word , word ) {
+    WHILE word > word {
+        IF word > word THEN {
+            RETURN word > word ;
+        }
+        ELSE {
+            RETURN word > word ;
+        }
+    }
 }
 

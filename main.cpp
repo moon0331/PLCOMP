@@ -1,4 +1,4 @@
-#include <iostream>
+//#include <iostream>
 #include <fstream>
 #include <string>
 #include <regex>
@@ -67,12 +67,12 @@ int main(int argc, const char *argv[]) {
 	ifstream scanner_file_to_parse(filename + ".scanner"); //ifstream for parsing
 	ofstream code_fin(filename + ".code");		//result .code
 
-//    cout << "Converted Code is" << endl;
-//    string line;
-//    while (!scanner_file_fin.eof()) {
-//        getline(scanner_file_fin, line);
-//        cout << line << endl;
-//    }
+    cout << "\n<Converted Code>" << endl;
+    string line;
+    while (!scanner_file_fin.eof()) {
+        getline(scanner_file_fin, line);
+        cout << line << endl;
+    }
 	
 	
 	ofstream sym(filename + ".symbol");  //symbol table file

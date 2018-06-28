@@ -6,7 +6,7 @@ worword ( worword , worword ) {
     }
     ELSE {
         INT word ;
-        RETURN word > worword;
+        RETURN word > worword ;
     }
 }
 
