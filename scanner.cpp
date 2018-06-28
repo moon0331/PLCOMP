@@ -228,12 +228,57 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 		string var = symTable[i].getname();
 		for (int lineNum = 0; lineNum < (int)code.size(); lineNum++) {
 			string& myLine = code[lineNum];
-			auto pos = myLine.find(var, 0);
+			auto pos = myLine.find(var, 0); //where var is located
 			while (pos != string::npos) {
-				myLine.replace(pos, var.length(), "word");
-//                cout << "line " << lineNum << " changed : " << myLine << endl;
-				pos += 4;
+				if (var.length() >= 5) {
+					myLine.replace(pos, var.length(), "word");
+					//                cout << "line " << lineNum << " changed : " << myLine << endl;
+					pos += 4;
+				}
+				else { //if length is 1
+					//cout << "now line is " << i << ", and its content is \n" << myLine << ", find(" << var << ")" << endl;
+					bool changeable = false;
+
+					const string WORD("word"), NUM("num");
+
+					int wordIdx = WORD.find(var, 0);
+					int numIdx = NUM.find(var, 0);
+
+
+					if (wordIdx == string::npos && numIdx == string::npos) changeable = true;
+					else if (wordIdx != string::npos) {
+						for (int x = 0; x < WORD.length(); x++) { // for w, o, r, d
+							int y = pos - wordIdx + x;
+							//cout << WORD[x] << " AND " << myLine[y] << endl;
+							if (WORD[x] != myLine[y]) {
+								changeable = true;
+								break;
+							}
+						}
+					}
+					else if (numIdx != string::npos) {
+						for (int x = 0; x < NUM.length(); x++) { // for n,u,m
+							int y = pos - wordIdx + x;
+							if (NUM[x] != myLine[y]) {
+								changeable = true;
+								break;
+							}
+						}
+					}
+
+					if (changeable) {
+						//cout << "CHANGE " << var << "into " << "word" << endl;
+						myLine.replace(pos, var.length(), "word");
+						pos += 4;
+					}
+					else {
+						//cout << "NOT CHANGE" << endl;
+						pos++;
+					}
+				}
+				//cout << "next find" << endl;
 				pos = myLine.find(var, pos);
+				//cout << "next pos is " << endl;
 			}
 		}
 	}
