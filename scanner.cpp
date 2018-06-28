@@ -137,12 +137,10 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 					else if (inputTape.size() >= 1 && (inputTape[inputTape.size() - 1] == "INT" || inputTape[inputTape.size() - 1] == "CHAR")) {
 						type = inputTape[inputTape.size() - 1];
 					}
-					else {
-						type = "function name"; // is it right??????????????
-					}
 
-					if (inputTape[inputTape.size()-1]=="(") {
-						symTable[0].addType(", function name");
+					if (inputTape.size()>0 && inputTape[inputTape.size() - 1] == "(") {
+						symTable[inputTape.size()-2].addType("function name");
+						cout << "it's is function name" << endl;
 					}
 
 					symTable.push_back(Information(myWord, type, "NAME", "WORD"));
