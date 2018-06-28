@@ -6,12 +6,12 @@
 
 #include "parser.h"
 
-#define NUM_OF_COL    38
-#define NUM_OF_STATES 177
+//#define NUM_OF_COL    38
+//#define NUM_OF_STATES 184
 
 string enum_to_str[] = {
-    "STATE", "(", ")", "type", ";", ",", "INT", "CHAR", "{", "}", "IF", "THEN",
-    "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "word", "$",
+    "STATE", "(", ")", ";", ",", "INT", "CHAR", "{", "}", "IF", "THEN",
+    "ELSE", "WHILE", "=", "RETURN", ">", "<", "+", "*", "num", "word", "$", "S",
     "prog", "decls", "decl", "words", "vtype", "block", "slist", "stat", "cond",
     "expr", "term", "fact", "n", "w", "acc"
 };
@@ -24,7 +24,7 @@ void Parser::create_LR_TABLE(){
         }
     }
     
-    ifstream csv_read("Transition_table-v2.csv"); // CHANGE THE PATH HERE
+    ifstream csv_read("Transition_table-v3.csv"); // CHANGE THE PATH HERE
     if(csv_read.is_open()){
         string line;
         while (!csv_read.eof()) {
@@ -98,12 +98,13 @@ void Parser::create_LR_TABLE(){
 }
 
 void Parser::create_grammar(){
+    grammars.push_back(Grammar{"S", vector<string>{"prog"}});
     grammars.push_back(Grammar{"prog", vector<string>{"vtype", "w", "(", "words", ")", "block"}});
     
     grammars.push_back(Grammar{"decls", vector<string>{"decls", "decl"}});
     grammars.push_back(Grammar{"decls", vector<string>{""}});
     
-    grammars.push_back(Grammar{"decl", vector<string>{"type", "words", ";"}});
+    grammars.push_back(Grammar{"decl", vector<string>{"vtype", "words", ";"}});
     
     grammars.push_back(Grammar{"words", vector<string>{"words", ",", "w"}});
     grammars.push_back(Grammar{"words", vector<string>{"w"}});
@@ -160,28 +161,32 @@ void Parser::parse(vector<string>& inputTape) {
     vector<string>::iterator it = inputTape.begin();
     int current_state = 0;
     
-    while(it!=end(inputTape)){
+//    while(it!=end(inputTape)){
+    while(sstack.size()!=0){
         string handle = *it;
+        if(it == end(inputTape)){
+            handle = "$";
+        }
         current_state = sstack.back()->stateNum;
         
         int nextDestination = LR_TABLE[current_state][MAP_LR_TABLE.find(handle)->second];
 		if (nextDestination >= 0){
+            if(nextDestination == 777){
+                cout<<"ACCEPTED"<<endl;
+                
+                for(auto it=begin(sstack); it!=end(sstack); it++){
+                    cout<<"STACK: "<<(*it)->str<<endl;
+                }
+                break;
+            }
 			shift(nextDestination, handle);
-            cout<<"HANDLE: "<<handle<<endl;
+//            cout<<"HANDLE: "<<handle<<endl;
 			it = next(it, 1);
 		}
 		else {
 			reduce(nextDestination);
-            cout<<"REDUCE #: "<<abs(nextDestination)<<endl;
+//            cout<<"REDUCE #: "<<abs(nextDestination)<<endl;
 		}
-    }
-    if(it==end(inputTape) || (int)sstack.size()==0){
-        // CHECK THE PARSE TREE HERE
-        cout<<"ACCEPTED"<<endl;
-        
-        for(auto it=begin(sstack); it!=end(sstack); it++){
-            cout<<"STACK: "<<(*it)->str<<endl;
-        }
     }
 }
 

@@ -6,7 +6,7 @@
 #include "state.h"
 
 #define NUM_OF_COL    38
-#define NUM_OF_STATES 177
+#define NUM_OF_STATES 184
 
 using namespace std;
 
