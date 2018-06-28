@@ -17,12 +17,6 @@ const vector<string> reserved = { "IF", "THEN", "ELSE", "WHILE", "RETURN" };
 const vector<string> vtype = { "INT", "CHAR" };
 const vector<string> terminals = { "(",		")",	";",	",",	"{",	"}",	"=",	">",	"<",	"+",	"*"};
 
-//    "(",        ")",        ";",
-//    ",",        "{",        "}",
-//    "=",
-//    ">",        "<",        "+",        "*",
-//    "num",        "$"
-
 extern SymbolTable symbolTable; //using extern to use symbolTable which is located in main.cpp
 
 bool index(const Information& a, const Information& b) {
@@ -63,12 +57,10 @@ bool isReservedWord(string token) { //is reserved word?
 }
 
 bool isMultiToken(string token, vector<string>& real_tokens) {
-//    cout << "isMultiToken?" << endl;
 	int size = (int)terminals.size();
 	for (int i = 0; i < size; i++) {
 		const string& s = terminals[i];
 		if (token.find(s) != string::npos && token.size()!=s.size()) {
-//            cout << "not a single token as " << s << " exists in " << token << endl;
 			return true;
 		}
 	}
@@ -85,20 +77,11 @@ void addRealToken(string token, vector<string>& real_tokens) {
 				tok += token[idx];
 				idx++;
 			}
-//            cout << "seperated " << tok << endl;
-			/*if(tok=="INT" || tok=="CHAR")
-				real_tokens.push_back(tok);
-			else if (regex_match(tok, regex("([0-9])*"))) {
-				real_tokens.push_back("num");
-			}
-			else {
-				real_tokens.push_back("word");
-			}*/
-			real_tokens.push_back(tok);
+
+            real_tokens.push_back(tok);
 		}
 		else {
 			tok += token[idx];
-//            cout << "seperated (one character) " << tok << endl;
 			real_tokens.push_back(tok);
 			idx++;
 		}
@@ -159,17 +142,12 @@ void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& co
 					}
 
 					if (inputTape.size()>0 && inputTape[inputTape.size() - 1] == "(") {
-						//symTable[startOfSymbolTable - 2].addType("function name");
-						//find correspond name
-						//and update data
+						//find correspond name and update data
 						string s = inputTape[inputTape.size() - 2];
-//                        cout << s << " is function name" << endl;
 						if (symbolTable.findName(s)) {
 							symbolTable.getInfo(s)->addType(", function name");
 						}
-//                        cout << "it's is function name";
 					}
-//                    cout << endl << myWord << "--------------------------------------------push" << endl;
 					symbolTable.push(Information(symbolTable.getNum(), myWord, type, "NAME", "WORD"));
 					startOfSymbolTable++;
 				}
@@ -225,10 +203,8 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 					else if (wordIdx != string::npos) {
 						for (int x = 0; x < WORD.length(); x++) { // for w, o, r, d
 							int y = pos - wordIdx + x;
-							//cout << WORD[x] << " AND " << myLine[y] << endl;
 							if (WORD[x] != myLine[y]) {
 								changeable = true;
-//                                break;
 							}
 						}
 					}
@@ -237,24 +213,19 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 							int y = pos - wordIdx + x;
 							if (NUM[x] != myLine[y]) {
 								changeable = true;
-//                                break;
 							}
 						}
 					}
 
 					if (changeable) {
-						//cout << "CHANGE " << var << "into " << "word" << endl;
 						myLine.replace(pos, var.length(), "word");
 						pos += 4;
 					}
 					else {
-						//cout << "NOT CHANGE" << endl;
 						pos++;
 					}
 				}
-				//cout << "next find" << endl;
 				pos = myLine.find(var, pos);
-				//cout << "next pos is " << endl;
 			}
 		}
 	}
