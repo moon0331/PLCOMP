@@ -15,8 +15,9 @@ void SymbolTable::push(Information info) {
 	numOfSymbols++;
 }
 bool SymbolTable::findName(string name) {
-	cout << "finding " << name << ".....";
+	cout << "finding " << name << "..... numOfSymbols is " << numOfSymbols << endl;
 	for (int i = 0; i < numOfSymbols; i++) {
+		cout << table[i].getname() << " == " << name << endl;
 		if (table[i].getname() == name) {
 			cout << "exist!";
 			return true;
@@ -25,18 +26,29 @@ bool SymbolTable::findName(string name) {
 	cout << "not exist!";
 	return false;
 }
+Information* SymbolTable::getInfo(string name) {
+	for (int i = 0; i < numOfSymbols; i++) {
+		if (table[i].getname()==name) {
+			return &(table[i]);
+		}
+	}
+}
 ostream& operator<<(ostream& os, const Information& info) {
-	os << "( name = " << info.name << " | " << info.type << " | " << info.ID << ")";
+	os << "( " << "[" << info.idx << "] " << "name = " << info.name << " | " << info.type << " | " << info.ID << ")";
 	return os;
 }
 
+
 // Method of Information
-Information::Information(string _name, string _type, string _ID, string _nontmn)
-	: name(_name), type(_type), ID(_ID), nonterminal(_nontmn)
+Information::Information(int i, string _name, string _type, string _ID, string _nontmn)
+	: idx(i), name(_name), type(_type), ID(_ID), nonterminal(_nontmn)
+
 {
 	size = (type == "INT") ? 4 : 1;
 }
-
+int Information::getIdx() const {
+	return idx;
+}
 string Information::getname() const {
 	return name;
 }
