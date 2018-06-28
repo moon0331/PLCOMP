@@ -148,6 +148,7 @@ void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& co
 				string myWord = real_tokens[i];
 				if (!strcmp(myWord.c_str(), "(")) isOpen = true;
 				if (!strcmp(myWord.c_str(), ")")) isOpen = false;
+                
 				if (regex_match(myWord, regWord) && find(inputTape.begin(), inputTape.end(), myWord) == inputTape.end() && !isReservedWord(myWord)) {
 					string type = "";
 					if (isOpen) {

@@ -1,5 +1,5 @@
-BEGIN testFunction
-INT testFunction ( a , b ) {
+BEGIN fourthTest
+INT fourthTest ( a , b ) {
     RETURN a > b ;
 }
-END testFunction
+END fourthTest

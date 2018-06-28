@@ -1,6 +1,6 @@
-BEGIN test2
-INT test2 ( left , right ) {
+BEGIN secondTest
+INT secondTest ( left , right ) {
     INT mid ;
     RETURN left > right ;
 }
-END test2
+END secondTest

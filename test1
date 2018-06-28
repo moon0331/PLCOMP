@@ -1,5 +1,5 @@
-BEGIN test1
-INT test1 ( a , b ) {
+BEGIN firstTest
+INT firstTest ( a , b ) {
     RETURN a > b ;
 }
-END test1
+END firstTest

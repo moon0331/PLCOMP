@@ -1,5 +1,5 @@
-BEGIN test3
-INT test3 ( a , b ) {
+BEGIN thirdTest
+INT thirdTest ( a , b ) {
     IF a > b THEN {
         CHAR c ;
         RETURN c > a ; 
@@ -9,4 +9,4 @@ INT test3 ( a , b ) {
         RETURN d > b;
     }
 }
-END test3
+END thirdTest
