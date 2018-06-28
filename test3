@@ -1,4 +1,4 @@
-word ( a , b ) {
+test3 ( a , b ) {
     IF a > b
     THEN {
         CHAR c ;
