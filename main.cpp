@@ -44,7 +44,7 @@ int main(int argc, const char *argv[]) {
 						string line;
 						file_fin >> line; // file->console
 						scanner_fout << line << endl; // console->file*/
-
+    
     //scanner starts to scan
 	vector<string> inputTape=scanner.scan(inputFile_fin, scanner_file);
 	scanner_file.close();

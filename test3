@@ -1,6 +1,6 @@
-test3 ( a , b ) {
-    IF a > b
-    THEN {
+BEGIN test3
+INT test3 ( a , b ) {
+    IF a > b THEN {
         CHAR c ;
         RETURN c > a ; 
     }
@@ -9,3 +9,4 @@ test3 ( a , b ) {
         RETURN d > b;
     }
 }
+END test3

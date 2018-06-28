@@ -1,4 +1,6 @@
+BEGIN test2
 INT test2 ( left , right ) {
     INT mid ;
     RETURN left > right ;
 }
+END test2

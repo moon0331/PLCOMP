@@ -1,0 +1,5 @@
+BEGIN testFunction
+INT testFunction ( a , b ) {
+    RETURN a > b ;
+}
+END testFunction

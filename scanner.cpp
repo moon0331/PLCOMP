@@ -104,14 +104,26 @@ void addRealToken(string token, vector<string>& real_tokens) {
 	}
 }
 
-void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& code, int& i, const regex regWord) {
+void functionScan(ifstream& input, vector<string>& inputTape, vector<string>& code, int i, const regex regWord) {
 
 	vector<Information>& symTable = symbolTable.table;
+    
+    string line;
+    getline(input, line);
+    if(line.find("BEGIN") != 0){
+        cout<<"ERROR: No Function Starts with BEGIN"<<endl;
+        exit(0);
+    }
 
 	//tokenize
 	while (true) {
 		string line;
 		getline(input, line);
+        
+        if(line.find("END")==0){
+            break;
+        }
+        
 		code.push_back(line);
 //        cout << "[" << i << "]" << line << " || NUM of Characters : " << line.length() << endl;
 		if (line.length() == 0) return;
@@ -192,11 +204,12 @@ vector<string> Scanner::scan(ifstream& input, ofstream& output) {
 
 	//bool isEndOfFunction = true;
 
-	for (int i = 1; !input.eof(); i++) {
-		functionScan(input, inputTape, code, i, regWord);
-//        cout << "goto another function" << endl;
-//        cout << input.eof() << "eof?" << endl;
-	}
+    functionScan(input, inputTape, code, 1, regWord);
+//    for (int i = 1; !input.eof(); i++) {
+//        
+////        cout << "goto another function" << endl;
+////        cout << input.eof() << "eof?" << endl;
+//    }
 
 	// change symbols into word
 	sort(symTable.begin(), symTable.end(), var_len);
