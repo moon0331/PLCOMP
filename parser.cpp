@@ -219,8 +219,8 @@ void Parser::reduce(int nextDestination) {
     newTuple->stateNum = current_state;
     newTuple->str = lhs;
     sstack.push_back(newTuple);
-    cout<<"New Tuple Inserted: state #"<<newTuple->stateNum<<endl;
-    cout<<"New Tuple Inserted: lhs: "<<newTuple->str<<endl<<endl;
+//    cout<<"New Tuple Inserted: state #"<<newTuple->stateNum<<endl;
+//    cout<<"New Tuple Inserted: lhs: "<<newTuple->str<<endl<<endl;
 }
 
 bool Parser::isFinalState() {

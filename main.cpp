@@ -72,6 +72,13 @@ int main(int argc, const char *argv[]) {
 		cout << vv[i] << endl;
 	cout << "-=------------------------------" << endl;
 
+	cout << "---------------input tape is----------------" << endl;
+	for (int i = 0; i < inputTape.size(); i++) {
+		cout << "[" << inputTape[i] << "]" << endl;
+	}
+	cout << "----------------------------------------------" << endl;
+
+
 	ifstream scanner_file_fin(filename + ".scanner");	//ifstream for print result of scanner
 	ifstream scanner_file_to_parse(filename + ".scanner"); //ifstream for parsing
 	ofstream code_fin(filename + ".code");		//result .code
@@ -102,6 +109,6 @@ int main(int argc, const char *argv[]) {
 	code_fin.close();
 	symbol_fin.close();
 
-	return 0;;
+	return 0;
 
 }

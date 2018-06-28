@@ -1,0 +1,4 @@
+INT word ( word , word ) {
+    RETURN word > word ;
+}
+

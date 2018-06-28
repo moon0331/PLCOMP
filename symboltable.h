@@ -7,7 +7,6 @@ class Information {
 private:
 	string name;
 	string type;
-	//여러 함수 적용시 함수 이름도 들어가야
 	string ID;
 	int size;
 	string nonterminal;
@@ -19,6 +18,7 @@ public:
 	string getID();
 	int getSize();
 	string getNonterminal();
+	void addType(string _type);
 	friend ostream& operator<<(ostream& os, const Information& info);
 };
 
